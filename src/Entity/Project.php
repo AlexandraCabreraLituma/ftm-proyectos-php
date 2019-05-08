@@ -13,6 +13,26 @@ use Doctrine\ORM\Mapping as ORM;
 class Project implements \JsonSerializable
 {
     /**
+     * Project constructor.
+     * @param string $title
+     * @param string $description
+     * @param string $specificObjectives
+     * @param \DateTime $initialDate
+     * @param \DateTime $finalDate
+     * @param \User $user
+     */
+    public function __construct(string $title, string $description, string $specificObjectives, \DateTime $initialDate, \DateTime $finalDate, \User $user)
+    {
+        $this->id = 0;
+        $this->title = $title;
+        $this->description = $description;
+        $this->specificObjectives = $specificObjectives;
+        $this->initialDate = $initialDate;
+        $this->finalDate = $finalDate;
+        $this->user = $user;
+    }
+
+    /**
      * @return int
      */
     public function getId()
@@ -189,14 +209,13 @@ class Project implements \JsonSerializable
     public function jsonSerialize():array
     {
         return array(
-            'id'            => $this->id,
-            'username'      => utf8_encode($this->username),
-            'email'         => utf8_encode($this->email),
-            'orcid'         => utf8_encode($this->orcid),
-            'firstname'     => utf8_encode($this->firstname),
-            'lastname'      => utf8_encode($this->lastname),
-            'phone'         => utf8_encode($this->phone),
-            'address'       => utf8_encode($this->address),
+            'id'                  => $this->id,
+            'title'               => utf8_encode($this->title),
+            'description'         => utf8_encode($this->description),
+            'specific_objectives' => utf8_encode($this->specificObjectives),
+            'initial_date'        => $this->initialDate->format('Y-m-d H:i:s'),
+            'final_date'          => $this->finalDate->format('Y-m-d H:i:s'),
+            'user'                => $this->user,
         );
 
     }
