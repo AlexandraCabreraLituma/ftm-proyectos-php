@@ -45,24 +45,13 @@ class ApiUserController extends AbstractController
             return $this->error422();
         }
 
-        if ( $this->getDoctrine()->getManager()->getRepository(User::class)->findOneBy(['username' =>$datos['username']]))
+        if ($this->getDoctrine()->getManager()->getRepository(User::class)->findOneBy(['username' =>$datos['username']])||
+            $this->getDoctrine()->getManager()->getRepository(User::class)->findOneBy(['email' =>$datos['email']])||
+            $this->getDoctrine()->getManager()->getRepository(User::class)->findOneBy(['orcid' =>$datos['orcid']])
+            )
         {
             return $this->error400();
-
         }
-        if ( $this->getDoctrine()->getManager()->getRepository(User::class)->findOneBy(['email' =>$datos['email']]))
-        {
-
-            return $this->error400();
-
-        }
-        if ( $this->getDoctrine()->getManager()->getRepository(User::class)->findOneBy(['orcid' =>$datos['orcid']]))
-        {
-
-            return $this->error400();
-
-        }
-
         /**
          * @var User user
          */
@@ -95,7 +84,7 @@ class ApiUserController extends AbstractController
     {
         $mensaje=[
             'code'=> Response::HTTP_UNPROCESSABLE_ENTITY,
-            'mensaje' => 'Unprocessable entity Username, e-mail or password is left out'
+            'mensaje' => 'Unprocessable entity Username, email, orcid or password is left out'
         ];
         return new JsonResponse(
             $mensaje,
@@ -112,7 +101,7 @@ class ApiUserController extends AbstractController
     {
         $mensaje=[
             'code'=> Response::HTTP_BAD_REQUEST,
-            'mensaje' => 'Bad Request Username or email already exists'
+            'mensaje' => 'Bad Request Username or email or orcid already exists'
         ];
         return new JsonResponse(
             $mensaje,
