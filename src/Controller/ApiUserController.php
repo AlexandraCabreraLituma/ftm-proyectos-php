@@ -68,6 +68,78 @@ class ApiUserController extends AbstractController
 
     }
 
+    /**
+     * @Route(path="", name="getc", methods={ Request::METHOD_GET })
+     * @return Response
+     */
+    public function getCUser():Response{
+        $em=$this->getDoctrine()->getManager();
+        /**
+         * @var User[] $users
+         */
+        $users =$em-> getRepository(User::class)->findAll();
+
+        return (null=== $users)
+            ? $this-> error404()
+            : new JsonResponse( ['users' => $users],Response::HTTP_OK);
+    }
+
+    /**
+     * @Route(path="/{id}", name="get_user",methods={Request::METHOD_GET})
+     * * @param User $user
+     * @return Response
+     */
+    public function getUserUniqueId(?User $user=null): Response
+    {
+        return (null === $user)
+            ? $this->error404()
+            : new JsonResponse(['user' => $user], Response::HTTP_OK);
+
+    }
+
+    /**
+     * @param $username
+     * @return Response
+     * @Route(path="/username/{username}", name="get_user_username", methods={"GET"})
+     */
+    public function getUserName($username): Response{
+
+        $user = $this->getDoctrine()->getManager()->getRepository(User::class)->findOneBy(['username' =>$username]);
+        return (null=== $user)
+            ? $this->error404()
+            : new JsonResponse(['user'=> $user],
+                Response::HTTP_OK);
+    }
+
+    /**
+     * @param $email
+     * @return Response
+     * @Route(path="/email/{email}", name="get_user_email", methods={"GET"})
+     */
+    public function getUserEmail($email): Response{
+
+        $user = $this->getDoctrine()->getManager()->getRepository(User::class)->findOneBy(['email' =>$email]);
+        return (null=== $user)
+            ? $this->error404()
+            : new JsonResponse(['user'=> $user],
+                Response::HTTP_OK);
+    }
+
+    /**
+     * @param $orcid
+     * @return Response
+     * @Route(path="/orcid/{orcid}", name="get_user_orcid", methods={"GET"})
+     */
+    public function getUserOrcid($orcid): Response{
+
+        $user = $this->getDoctrine()->getManager()->getRepository(User::class)->findOneBy(['orcid' =>$orcid]);
+        return (null=== $user)
+            ? $this->error404()
+            : new JsonResponse(['user'=> $user],
+                Response::HTTP_OK);
+    }
+
+
     private function error404() : JsonResponse
     {
         $mensaje=[
