@@ -8,15 +8,15 @@
 
 namespace App\Controller;
 
-namespace App\Controller;
 use App\Entity\User;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
-
-
 
 /**
  * Class ApiUserController
@@ -62,12 +62,13 @@ class ApiUserController extends AbstractController
             return $this->error400();
 
         }
+
         /**
          * @var User user
          */
         $user= new User($datos['username'],$datos['password'], $datos['email'],
                         $datos['orcid'],$datos['firstname'], $datos['lastname'],
-                 $datos['phone']??0,$datos['address']??'');
+                        $datos['phone'],$datos['address']);
         $em=$this->getDoctrine()->getManager();
         $em ->persist($user);
         $em->flush();

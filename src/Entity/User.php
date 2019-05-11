@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="users", uniqueConstraints={@ORM\UniqueConstraint(name="orcid", columns={"orcid"}), @ORM\UniqueConstraint(name="email", columns={"email"}), @ORM\UniqueConstraint(name="username", columns={"username"})})
  * @ORM\Entity
  */
-class User
+class User implements \JsonSerializable
 {
     /**
      * User constructor.
