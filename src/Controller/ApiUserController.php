@@ -28,7 +28,7 @@ class ApiUserController extends AbstractController
 {
     //ruta de la api de user
     const USER_API_PATH='/api/v1/users';
-
+    public const LOGIN = '/login';
 
     /**
      * @Route(path="", name="post",methods={Request::METHOD_POST})
@@ -141,6 +141,28 @@ class ApiUserController extends AbstractController
         return (null=== $user)
             ? $this->error404()
             : new JsonResponse(['user'=> $user],
+                Response::HTTP_OK);
+    }
+
+    /**
+     * @param Request $request
+     * @return Response
+     * @Route(path="/login", name="login", methods={"POST"})
+     */
+    public function login(Request $request): Response{
+        $validator=false;
+        $dataRequest = $request->getContent();
+        $data = json_decode($dataRequest, true);
+
+        $em = $this->getDoctrine()->getManager();
+        $user = $em->getRepository(User::class)->findOneBy(['username'=> $data['username']]);
+        if($user!==null){
+            $validator= $user->validatePassword($data['password']);
+        }
+        return ($validator === false)
+            ? $this->error404()
+            : new JsonResponse(
+                ['userId'=>$user->getId()],
                 Response::HTTP_OK);
     }
 
