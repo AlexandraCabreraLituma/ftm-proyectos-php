@@ -93,12 +93,12 @@ class ApiUserControllerTest extends WebTestCase
         $userUser= [
             'username' => $datosUser['user']['username'],
             'password' => 'prueba',
-            'email' =>  $datosUser['user']['email'],
-            'orcid'=> $datosUser['user']['orcid'],
-            'firstname' =>'prueba',
-            'lastname'=>'prueba',
-            'phone' => 123456,
-            'address'=>'prueba'
+            'email'    => $datosUser['user']['email'],
+            'orcid'    => $datosUser['user']['orcid'],
+            'firstname'=>'prueba',
+            'lastname' =>'prueba',
+            'phone'    => 123456,
+            'address'  =>'prueba'
         ];
 
         self::$client->request(
