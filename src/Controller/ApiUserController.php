@@ -85,22 +85,9 @@ class ApiUserController extends AbstractController
     }
 
     /**
-     * @Route(path="/{id}", name="get_user",methods={Request::METHOD_GET})
-     * * @param User $user
-     * @return Response
-     */
-    public function getUserUniqueId(?User $user=null): Response
-    {
-        return (null === $user)
-            ? $this->error404()
-            : new JsonResponse(['user' => $user], Response::HTTP_OK);
-
-    }
-
-    /**
      * @param $username
      * @return Response
-     * @Route(path="/username/{username}", name="get_user_username", methods={"GET"})
+     * @Route(path="/{username}", name="get_user_username", methods={"GET"})
      */
     public function getUserName($username): Response{
 
@@ -110,6 +97,7 @@ class ApiUserController extends AbstractController
             : new JsonResponse(['user'=> $user],
                 Response::HTTP_OK);
     }
+
 
     /**
      * @param $email
@@ -139,6 +127,22 @@ class ApiUserController extends AbstractController
                 Response::HTTP_OK);
     }
 
+    /**
+     * @param $valor
+     * @return Response
+     * @Route(path="/details/{valor}", name="get_user_details", methods={"GET"})
+     */
+    public function getUserValor($valor): Response{
+
+        $user = ($this->getDoctrine()->getManager()->getRepository(User::class)->findOneBy(['username' =>$valor])||
+            $this->getDoctrine()->getManager()->getRepository(User::class)->findOneBy(['email' =>$valor])||
+            $this->getDoctrine()->getManager()->getRepository(User::class)->findOneBy(['orcid' =>$valor])
+        );
+        return (null=== $user)
+            ? $this->error404()
+            : new JsonResponse(['user'=> $user],
+                Response::HTTP_OK);
+    }
 
     private function error404() : JsonResponse
     {
