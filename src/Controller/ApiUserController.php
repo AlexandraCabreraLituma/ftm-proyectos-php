@@ -28,7 +28,10 @@ class ApiUserController extends AbstractController
 {
     //ruta de la api de user
     const USER_API_PATH='/api/v1/users';
-    public const LOGIN = '/login';
+    const LOGIN = '/login';
+    const EMAIL = '/email';
+    const ORCID = '/orcid';
+
 
     /**
      * @Route(path="", name="post",methods={Request::METHOD_POST})
@@ -38,13 +41,8 @@ class ApiUserController extends AbstractController
     public function postUsers(Request $request):Response{
         $datosPeticion=$request->getContent();
         $datos=json_decode($datosPeticion,true);
-
-
         if(empty($datos['username']) || empty($datos['password']) || empty($datos['orcid']) || empty($datos['firstname'])|| empty($datos['lastname']) || empty($datos['phone']) || empty($datos['address']) )
-        {
-            return $this->error422();
-        }
-
+        {   return $this->error422();}
         if ($this->getDoctrine()->getManager()->getRepository(User::class)->findOneBy(['username' =>$datos['username']])||
             $this->getDoctrine()->getManager()->getRepository(User::class)->findOneBy(['email' =>$datos['email']])||
             $this->getDoctrine()->getManager()->getRepository(User::class)->findOneBy(['orcid' =>$datos['orcid']])
@@ -52,9 +50,7 @@ class ApiUserController extends AbstractController
         {
             return $this->error400();
         }
-        /**
-         * @var User user
-         */
+        /*** @var User user */
         $user= new User($datos['username'],$datos['password'], $datos['email'],
                         $datos['orcid'],$datos['firstname'], $datos['lastname'],
                         $datos['phone'],$datos['address']);
@@ -65,7 +61,6 @@ class ApiUserController extends AbstractController
             ["user" => $user],
             Response::HTTP_CREATED
         );
-
     }
 
     /**
@@ -74,11 +69,8 @@ class ApiUserController extends AbstractController
      */
     public function getCUser():Response{
         $em=$this->getDoctrine()->getManager();
-        /**
-         * @var User[] $users
-         */
+        /** * @var User[] $users */
         $users =$em-> getRepository(User::class)->findAll();
-
         return (null=== $users)
             ? $this-> error404()
             : new JsonResponse( ['users' => $users],Response::HTTP_OK);
@@ -90,7 +82,6 @@ class ApiUserController extends AbstractController
      * @Route(path="/{username}", name="get_user_username", methods={"GET"})
      */
     public function getUserName($username): Response{
-
         $user = $this->getDoctrine()->getManager()->getRepository(User::class)->findOneBy(['username' =>$username]);
         return (null=== $user)
             ? $this->error404()
@@ -105,7 +96,6 @@ class ApiUserController extends AbstractController
      * @Route(path="/email/{email}", name="get_user_email", methods={"GET"})
      */
     public function getUserEmail($email): Response{
-
         $user = $this->getDoctrine()->getManager()->getRepository(User::class)->findOneBy(['email' =>$email]);
         return (null=== $user)
             ? $this->error404()
@@ -119,25 +109,7 @@ class ApiUserController extends AbstractController
      * @Route(path="/orcid/{orcid}", name="get_user_orcid", methods={"GET"})
      */
     public function getUserOrcid($orcid): Response{
-
         $user = $this->getDoctrine()->getManager()->getRepository(User::class)->findOneBy(['orcid' =>$orcid]);
-        return (null=== $user)
-            ? $this->error404()
-            : new JsonResponse(['user'=> $user],
-                Response::HTTP_OK);
-    }
-
-    /**
-     * @param $valor
-     * @return Response
-     * @Route(path="/details/{valor}", name="get_user_details", methods={"GET"})
-     */
-    public function getUserValor($valor): Response{
-
-        $user = ($this->getDoctrine()->getManager()->getRepository(User::class)->findOneBy(['username' =>$valor])||
-            $this->getDoctrine()->getManager()->getRepository(User::class)->findOneBy(['email' =>$valor])||
-            $this->getDoctrine()->getManager()->getRepository(User::class)->findOneBy(['orcid' =>$valor])
-        );
         return (null=== $user)
             ? $this->error404()
             : new JsonResponse(['user'=> $user],
@@ -153,7 +125,6 @@ class ApiUserController extends AbstractController
         $validator=false;
         $dataRequest = $request->getContent();
         $data = json_decode($dataRequest, true);
-
         $em = $this->getDoctrine()->getManager();
         $user = $em->getRepository(User::class)->findOneBy(['username'=> $data['username']]);
         if($user!==null){
@@ -189,12 +160,6 @@ class ApiUserController extends AbstractController
             Response::HTTP_UNPROCESSABLE_ENTITY
         );
     }
-
-
-    /**
-     * @return JsonResponse
-     *
-     */
     private function error400() : JsonResponse
     {
         $mensaje=[
