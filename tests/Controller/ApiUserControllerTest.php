@@ -38,10 +38,10 @@ class ApiUserControllerTest extends WebTestCase
     /**
      * Implements testPostUser201
      * @throws \Exception
-     * @return int
+     * @return array
      * @covers ::postUsers
      */
-    public function testPostUser201(): int
+    public function testPostUser201(): array
     {
         $randomico=random_int(1000,20000);
         $username = 'NuevoNombre ' .$randomico;
@@ -75,7 +75,7 @@ class ApiUserControllerTest extends WebTestCase
         );
         $cuerpo = self::$client->getResponse()->getContent();
         $datosUser = json_decode($cuerpo, true);
-        return $datosUser['user']['id'];
+        return $datosUser['user'];
     }
 
     /**
@@ -139,5 +139,175 @@ class ApiUserControllerTest extends WebTestCase
             Response::HTTP_UNPROCESSABLE_ENTITY,
             self::$client->getResponse()->getStatusCode()
         );
+    }
+
+    /**
+     * @covers ::getCUser
+     */
+    public function testGetCUser200():void
+    {
+        self::$client->request(Request::METHOD_GET, ApiUserController::USER_API_PATH);
+        $cuerpo= self::$client->getResponse()->getContent();
+        self::assertJson($cuerpo);
+        /**
+         * @var array $datos
+         */
+        $datos= json_decode($cuerpo,true);
+        self::assertArrayHasKey("users",$datos);
+
+    }
+
+    /**
+     * Implements testGetUserUniqueUserName200
+     * @param array $user
+     * @return string
+     *
+     * @covers ::getUserName
+     * @depends  testPostUser201
+     */
+    public function testGetUserUniqueUserName200(array $user): string
+    {
+        $username=$user['username'];
+        self::$client->request(
+            Request::METHOD_GET,
+            ApiUserController::USER_API_PATH . '/'.$username
+        );
+        self::assertEquals(
+            Response::HTTP_OK,
+            self::$client->getResponse()->getStatusCode()
+        );
+        $cuerpo = self::$client->getResponse()->getContent();
+        self::assertJson($cuerpo);
+        /** @var array $datos */
+        $datos = json_decode($cuerpo, true);
+        self::assertArrayHasKey('user', $datos);
+        self::assertEquals($username, $datos['user']['username']);
+
+        return $username;
+    }
+
+    /**
+     * Implements testGetUser404
+     * @param string $username
+     *
+     * @covers ::getUserName
+     * @dataProvider providerDataNotOk
+     */
+    public function testGetUserUniqueUserName404(string $username): void
+    {
+        self::$client->request(
+            Request::METHOD_GET,
+            ApiUserController::USER_API_PATH . '/' . $username
+        );
+        self::assertEquals(
+            Response::HTTP_NOT_FOUND,
+            self::$client->getResponse()->getStatusCode()
+        );
+
+    }
+
+    /**
+     * Implements testGetUserUniqueUserName200
+     * @param array $user
+     * @return string
+     *
+     * @covers ::getUserEmail
+     * @depends  testPostUser201
+     */
+    public function testGetUserUniqueEmail200(array $user): string
+    {
+        $email=$user['email'];
+        self::$client->request(
+            Request::METHOD_GET,
+            ApiUserController::USER_API_PATH . ApiUserController::EMAIL .'/'.$email
+        );
+        self::assertEquals(
+            Response::HTTP_OK,
+            self::$client->getResponse()->getStatusCode()
+        );
+        $cuerpo = self::$client->getResponse()->getContent();
+        self::assertJson($cuerpo);
+        /** @var array $datos */
+        $datos = json_decode($cuerpo, true);
+        self::assertArrayHasKey('user', $datos);
+        self::assertEquals($email, $datos['user']['email']);
+
+        return $email;
+    }
+
+    /**
+     * Implements testGetUser404
+     * @param string $email
+     *
+     * @covers ::getUserEmail
+     * @dataProvider providerDataNotOk
+     */
+    public function testGetUserUniqueEmail404(string $email): void
+    {
+        self::$client->request(
+            Request::METHOD_GET,
+            ApiUserController::USER_API_PATH . ApiUserController::EMAIL .'/'.$email
+        );
+        self::assertEquals(
+            Response::HTTP_NOT_FOUND,
+            self::$client->getResponse()->getStatusCode()
+        );
+
+    }
+    /**
+     * Implements testGetUserUniqueUserName200
+     * @param array $user
+     * @return string
+     * @covers ::getUserOrcid
+     * @depends  testPostUser201
+     */
+    public function testGetUserUniqueOrcid200(array $user): string
+    {
+        $orcid=$user['orcid'];
+        self::$client->request(
+            Request::METHOD_GET,
+            ApiUserController::USER_API_PATH . ApiUserController::ORCID .'/'.$orcid
+        );
+        self::assertEquals(
+            Response::HTTP_OK,
+            self::$client->getResponse()->getStatusCode()
+        );
+        $cuerpo = self::$client->getResponse()->getContent();
+        self::assertJson($cuerpo);
+        /** @var array $datos */
+        $datos = json_decode($cuerpo, true);
+        self::assertArrayHasKey('user', $datos);
+        self::assertEquals($orcid, $datos['user']['orcid']);
+
+        return $orcid;
+    }
+    /**
+     * Implements testGetUser404
+     * @param string $orcid
+     * @covers ::getUserOrcid
+     * @dataProvider providerDataNotOk
+     */
+    public function testGetUserUniqueOrcid404(string $orcid): void
+    {
+        self::$client->request(
+            Request::METHOD_GET,
+            ApiUserController::USER_API_PATH . ApiUserController::ORCID .'/'.$orcid
+        );
+        self::assertEquals(
+            Response::HTTP_NOT_FOUND,
+            self::$client->getResponse()->getStatusCode()
+        );
+
+    }
+
+    /*** @return array */
+    public function providerDataNotOk():array {
+        $randomico=random_int(1000,20000);
+        $datanotOk1="valor 1".$randomico;
+        $datanotOk2="valor 2".$randomico;
+        return [
+            "datanotOk1"=>[$datanotOk1],
+            "datanotOk2"=>[$datanotOk2]
+        ];
     }
 }
