@@ -12,6 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Project implements \JsonSerializable
 {
+
+
     /**
      * Project constructor.
      * @param string $title
@@ -19,9 +21,14 @@ class Project implements \JsonSerializable
      * @param string $specificObjectives
      * @param \DateTime $initialDate
      * @param \DateTime $finalDate
-     * @param \User $user
+     * @param User $user
      */
-    public function __construct(string $title, string $description, string $specificObjectives, \DateTime $initialDate, \DateTime $finalDate, \User $user)
+    public function __construct(string $title,
+                                string $description,
+                                string $specificObjectives,
+                                \DateTime $initialDate,
+                                \DateTime $finalDate,
+                                User $user = null)
     {
         $this->id = 0;
         $this->title = $title;
@@ -129,7 +136,7 @@ class Project implements \JsonSerializable
     }
 
     /**
-     * @return \User
+     * @return User
      */
     public function getUser()
     {
@@ -137,7 +144,7 @@ class Project implements \JsonSerializable
     }
 
     /**
-     * @param \User $user
+     * @param User $user
      */
     public function setUser($user)
     {
@@ -189,7 +196,7 @@ class Project implements \JsonSerializable
 
     /**
      * Result User
-     * @var \User
+     * @var User
      *
      * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumns({
@@ -218,6 +225,26 @@ class Project implements \JsonSerializable
             'user'                => $this->user,
         );
 
+    }
+
+    /**
+     * Implements __toString()
+     *
+     * @return string
+     * @link   http://php.net/manual/en/language.oop5.magic.php#language.oop5.magic.tostring
+     */
+    public function __toString(): string
+    {
+        return sprintf(
+            '%3d - %3d - %22s - %3d - %s - %s ' ,
+            $this->id,
+            $this->title,
+            $this->description,
+            $this->user,
+            $this->initialDate->format('Y-m-d H:i:s'),
+            $this->finalDate->format('Y-m-d H:i:s')
+
+        );
     }
 
 }
