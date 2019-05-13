@@ -133,7 +133,7 @@ class ApiUserController extends AbstractController
         return ($validator === false)
             ? $this->error404()
             : new JsonResponse(
-                ['userId'=>$user->getId()],
+                ['userid'=>$user->getId()],
                 Response::HTTP_OK);
     }
 
