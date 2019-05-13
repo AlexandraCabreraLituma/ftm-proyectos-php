@@ -78,6 +78,7 @@ class ApiUserControllerTest extends WebTestCase
         return $datosUser['user'];
     }
 
+
     /**
      * Implements testPostUser400 (los datos del usario ya existe)
      * (volvemos a intentar insertar los datos del usario existen, verificado el username, email y orcid)
@@ -297,6 +298,56 @@ class ApiUserControllerTest extends WebTestCase
             Response::HTTP_NOT_FOUND,
             self::$client->getResponse()->getStatusCode()
         );
+
+    }
+    /**
+     * Implements testLogin201
+     * @throws \Exception
+     * @covers ::login
+     * @return int
+     */
+    public function testLogin201(): int
+    {
+        $datos = [
+            'username' => 'jason',
+            'password' => 'dedek454'
+        ];
+        self::$client->request(
+            Request::METHOD_POST,
+            ApiUserController::USER_API_PATH.ApiUserController::LOGIN,
+            [], [], [], json_encode($datos)
+        );
+        self::assertEquals(
+            Response::HTTP_OK,
+            self::$client->getResponse()->getStatusCode()
+        );
+        $cuerpo = self::$client->getResponse()->getContent();
+        $datosUser = json_decode($cuerpo, true);
+        return $datosUser['userid'];
+
+    }
+
+    /**
+     * Implements testLogin404
+     * @throws \Exception
+     * @covers ::login
+     */
+    public function testLogin404(): void
+    {
+        $datos = [
+            'username' => 'jasrrtyon',
+            'password' => 'dedek454'
+        ];
+        self::$client->request(
+            Request::METHOD_POST,
+            ApiUserController::USER_API_PATH.ApiUserController::LOGIN,
+            [], [], [], json_encode($datos)
+        );
+        self::assertEquals(
+            Response::HTTP_NOT_FOUND,
+            self::$client->getResponse()->getStatusCode()
+        );
+
 
     }
 
