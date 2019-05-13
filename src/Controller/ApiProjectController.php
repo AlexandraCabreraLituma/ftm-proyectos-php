@@ -20,12 +20,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * Class ApiProyectController
+ * Class ApiProjectController
  * @package App\Controller
- * @Route(path=ApiProyectController::PROJECT_API_PATH, name="api_proyect_")
+ * @Route(path=ApiProjectController::PROJECT_API_PATH, name="api_project_")
  *
  */
-class ApiProyectController extends AbstractController
+class ApiProjectController extends AbstractController
 {
     //ruta de la api de project
     const PROJECT_API_PATH='/api/v1/projects';
