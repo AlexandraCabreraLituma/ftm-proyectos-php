@@ -98,7 +98,7 @@ class ApiProjectControllerTest extends WebTestCase
             'specific_objectives'=>$specific_objectives,
             'initial_date'=> '',
             'final_date'=> '',
-            'enabled'=> false,
+            'enabled'=> true,
             'category'=> $category,
             'user_id' => $user
         ];
