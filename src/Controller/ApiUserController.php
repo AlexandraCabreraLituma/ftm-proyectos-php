@@ -29,6 +29,7 @@ class ApiUserController extends AbstractController
     //ruta de la api de user
     const USER_API_PATH='/api/v1/users';
     const LOGIN = '/login';
+    const USERNAME = '/username';
     const EMAIL = '/email';
     const ORCID = '/orcid';
 
