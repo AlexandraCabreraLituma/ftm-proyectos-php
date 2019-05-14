@@ -157,6 +157,69 @@ class ApiUserControllerTest extends WebTestCase
         self::assertArrayHasKey("users",$datos);
 
     }
+    /**
+     * Implements testGetcUser400
+     * @covers ::getCUser
+     */
+    public function testGetcUser404()
+    {
+        self::$client->request(
+            request::METHOD_GET,
+            ApiUserController::USER_API_PATH . "/us"
+        );
+        /** @var Response $response */
+        $response = self::$client->getResponse();
+        self::assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
+    }
+
+
+    /**
+     * Implements testGetUserUnique200
+     * @param array $user
+     * @return int
+     *
+     * @covers ::getUserUnique
+     * @depends  testPostUser201
+     */
+    public function testGetUserUnique200(array $user): int
+    {
+        $id=$user['id'];
+        self::$client->request(
+            Request::METHOD_GET,
+            ApiUserController::USER_API_PATH . '/' . $id
+        );
+        self::assertEquals(
+            Response::HTTP_OK,
+            self::$client->getResponse()->getStatusCode()
+        );
+        $cuerpo = self::$client->getResponse()->getContent();
+        self::assertJson($cuerpo);
+        /** @var array $datos */
+        $datos = json_decode($cuerpo, true);
+        self::assertArrayHasKey('user', $datos);
+        self::assertEquals($id, $datos['user']['id']);
+
+        return $id;
+    }
+    /**
+     * Implements testGetUser404
+     * @param int $id
+     *
+     * @covers ::getUserUnique
+     */
+    public function testGetUser404(): void
+    {
+        $id=random_int(3000,50000);
+        self::$client->request(
+            Request::METHOD_GET,
+            ApiUserController::USER_API_PATH . '/' . $id
+        );
+        self::assertEquals(
+            Response::HTTP_NOT_FOUND,
+            self::$client->getResponse()->getStatusCode()
+        );
+
+    }
 
     /**
      * Implements testGetUserUniqueUserName200
@@ -171,7 +234,7 @@ class ApiUserControllerTest extends WebTestCase
         $username=$user['username'];
         self::$client->request(
             Request::METHOD_GET,
-            ApiUserController::USER_API_PATH . '/'.$username
+            ApiUserController::USER_API_PATH . ApiUserController::USERNAME .  '/'.$username
         );
         self::assertEquals(
             Response::HTTP_OK,
@@ -198,7 +261,7 @@ class ApiUserControllerTest extends WebTestCase
     {
         self::$client->request(
             Request::METHOD_GET,
-            ApiUserController::USER_API_PATH . '/' . $username
+            ApiUserController::USER_API_PATH . ApiUserController::USERNAME . '/' . $username
         );
         self::assertEquals(
             Response::HTTP_NOT_FOUND,
