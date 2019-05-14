@@ -14,36 +14,42 @@ class Project implements \JsonSerializable
 {
 
 
-
     /**
-     * Project constructor.
-     * @param string $title
-     * @param string $description
-     * @param string $specificObjectives
-     * @param \DateTime $initialDate
-     * @param \DateTime $finalDate
-     * @param User $user
+     * constructor.
+     *
+     * @param string $title title
+     * @param string $description description
+     * @param string $specificObjectives specificObjectives
+     * @param \DateTime $initialDate initialDate
+     * @param \DateTime $finalDate finalDate
+     * @param bool $enabled enabled
+     * @param string $category category
+     * @param User $user user
      */
-    public function __construct(string $title,
-                                string $description,
-                                string $specificObjectives,
-                                \DateTime $initialDate,
-                                \DateTime $finalDate,
-                                User $user = null)
-    {
+    public function __construct(
+        string $title,
+        string $description,string $specificObjectives,
+        \DateTime $initialDate, \DateTime $finalDate,
+        bool   $enabled,
+        string $category,
+        User $user= null
+    ) {
         $this->id = 0;
         $this->title = $title;
         $this->description = $description;
         $this->specificObjectives = $specificObjectives;
         $this->initialDate = $initialDate;
         $this->finalDate = $finalDate;
+        $this->enabled = $enabled;
+        $this->category = $category;
         $this->user = $user;
     }
+
 
     /**
      * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -51,7 +57,7 @@ class Project implements \JsonSerializable
     /**
      * @param int $id
      */
-    public function setId($id)
+    public function setId(int $id): void
     {
         $this->id = $id;
     }
@@ -59,7 +65,7 @@ class Project implements \JsonSerializable
     /**
      * @return string
      */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }
@@ -67,7 +73,7 @@ class Project implements \JsonSerializable
     /**
      * @param string $title
      */
-    public function setTitle($title)
+    public function setTitle(string $title): void
     {
         $this->title = $title;
     }
@@ -75,7 +81,7 @@ class Project implements \JsonSerializable
     /**
      * @return string
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
@@ -83,7 +89,7 @@ class Project implements \JsonSerializable
     /**
      * @param string $description
      */
-    public function setDescription($description)
+    public function setDescription(string $description): void
     {
         $this->description = $description;
     }
@@ -91,7 +97,7 @@ class Project implements \JsonSerializable
     /**
      * @return string
      */
-    public function getSpecificObjectives()
+    public function getSpecificObjectives(): string
     {
         return $this->specificObjectives;
     }
@@ -99,7 +105,7 @@ class Project implements \JsonSerializable
     /**
      * @param string $specificObjectives
      */
-    public function setSpecificObjectives($specificObjectives)
+    public function setSpecificObjectives(string $specificObjectives): void
     {
         $this->specificObjectives = $specificObjectives;
     }
@@ -107,7 +113,7 @@ class Project implements \JsonSerializable
     /**
      * @return \DateTime
      */
-    public function getInitialDate()
+    public function getInitialDate(): \DateTime
     {
         return $this->initialDate;
     }
@@ -115,7 +121,7 @@ class Project implements \JsonSerializable
     /**
      * @param \DateTime $initialDate
      */
-    public function setInitialDate($initialDate)
+    public function setInitialDate(\DateTime $initialDate): void
     {
         $this->initialDate = $initialDate;
     }
@@ -123,7 +129,7 @@ class Project implements \JsonSerializable
     /**
      * @return \DateTime
      */
-    public function getFinalDate()
+    public function getFinalDate(): \DateTime
     {
         return $this->finalDate;
     }
@@ -131,15 +137,31 @@ class Project implements \JsonSerializable
     /**
      * @param \DateTime $finalDate
      */
-    public function setFinalDate($finalDate)
+    public function setFinalDate(\DateTime $finalDate): void
     {
         $this->finalDate = $finalDate;
     }
 
     /**
+     * @return string
+     */
+    public function getCategory(): string
+    {
+        return $this->category;
+    }
+
+    /**
+     * @param string $category
+     */
+    public function setCategory(string $category): void
+    {
+        $this->category = $category;
+    }
+
+    /**
      * @return User
      */
-    public function getUser()
+    public function getUser(): User
     {
         return $this->user;
     }
@@ -147,10 +169,29 @@ class Project implements \JsonSerializable
     /**
      * @param User $user
      */
-    public function setUser($user)
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }
+    /**
+     * @return bool
+     */
+    public function isEnabled(): bool
+    {
+        return $this->enabled;
+    }
+
+
+
+
+    /**
+     * @param bool $enabled
+     */
+    public function setEnabled(bool $enabled): void
+    {
+        $this->enabled = $enabled;
+    }
+
     /**
      * @var int
      *
@@ -195,8 +236,28 @@ class Project implements \JsonSerializable
      */
     private $finalDate;
 
+
     /**
-     * Result User
+     * Enabled
+     *
+     * @var boolean
+     *
+     * @ORM\Column(
+     *     name     = "enabled",
+     *     type     = "boolean",
+     *     nullable = false
+     *     )
+     */
+    private $enabled;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="category", type="string", length=60, nullable=false)
+     */
+    private $category;
+
+    /**
      * @var User
      *
      * @ORM\ManyToOne(targetEntity="User")
@@ -223,6 +284,8 @@ class Project implements \JsonSerializable
             'specific_objectives' => utf8_encode($this->specificObjectives),
             'initial_date'        => $this->initialDate->format('Y-m-d H:i:s'),
             'final_date'          => $this->finalDate->format('Y-m-d H:i:s'),
+            'enabled'             => $this->enabled,
+            'category'            => utf8_encode($this->category),
             'user'                => $this->user,
         );
 
@@ -237,13 +300,16 @@ class Project implements \JsonSerializable
     public function __toString(): string
     {
         return sprintf(
-            '%3d - %3d - %22s - %3d - %s - %s ' ,
+            '%3d - %3d - %22s - %3d - %s - %s - %22s - %22s' ,
             $this->id,
             $this->title,
             $this->description,
             $this->user,
             $this->initialDate->format('Y-m-d H:i:s'),
-            $this->finalDate->format('Y-m-d H:i:s')
+            $this->finalDate->format('Y-m-d H:i:s'),
+            $this->enabled,
+            $this->$this->category
+
 
         );
     }
