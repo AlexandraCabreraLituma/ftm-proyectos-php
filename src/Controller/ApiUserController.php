@@ -75,11 +75,22 @@ class ApiUserController extends AbstractController
             ? $this-> error404()
             : new JsonResponse( ['users' => $users],Response::HTTP_OK);
     }
+    /**
+     * @Route(path="/{id}", name="get_user", methods={Request::METHOD_GET})
+     * @param User $user
+     * @return JsonResponse
+     */
+    public function getUserUnique(?User $user = null): JsonResponse
+    {
+        return (null == $user)
+            ? $this->error404()
+            : new JsonResponse(['user' => $user], Response::HTTP_OK);
+    }
 
     /**
      * @param $username
      * @return Response
-     * @Route(path="/{username}", name="get_user_username", methods={"GET"})
+     * @Route(path="/username/{username}", name="get_user_username", methods={"GET"})
      */
     public function getUserName($username): Response{
         $user = $this->getDoctrine()->getManager()->getRepository(User::class)->findOneBy(['username' =>$username]);
