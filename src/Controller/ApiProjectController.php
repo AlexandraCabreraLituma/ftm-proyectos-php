@@ -70,6 +70,75 @@ class ApiProjectController extends AbstractController
 
     }
 
+    /**
+     * @Route(path="", name="getc", methods={ Request::METHOD_GET })
+     * @return Response
+     */
+    public function getCProject():Response{
+        $em=$this->getDoctrine()->getManager();
+        /** * @var Project[] $projetcs */
+        $projetcs =$em-> getRepository(Project::class)->findAll();
+       // $projetcs = $em->getRepository(Project::class)->findBy(['enabled' =>true]);
+
+        return (null=== $projetcs)
+            ? $this-> error404()
+            : new JsonResponse( ['projects' => $projetcs],Response::HTTP_OK);
+    }
+
+    /**
+     * @Route(path="/enabled/", name="getc_project_enabled", methods={ Request::METHOD_GET })
+     * @return Response
+     */
+    public function getCProjectEnabled():Response{
+        $em=$this->getDoctrine()->getManager();
+        /** * @var Project[] $projetcs */
+        $projetcs = $em->getRepository(Project::class)->findBy(['enabled' =>true]);
+
+        return (null=== $projetcs)
+            ? $this-> error404()
+            : new JsonResponse( ['projects' => $projetcs],Response::HTTP_OK);
+    }
+
+    /**
+     * @Route(path="/user/{user_id}", name="getc_project_user", methods={ Request::METHOD_GET })
+     * @return Response
+     */
+    public function getCProjectUser($user_id):Response{
+        $em=$this->getDoctrine()->getManager();
+
+        /** @var User $user */
+        $user=$this->getDoctrine()->getManager()->getRepository(User::class)->find($user_id);
+
+        if($user===null){
+            return $this->error400();
+        }
+
+        /** * @var Project[] $projetcs */
+        $projetcs = $em->getRepository(Project::class)->findBy(['user' =>$user]);
+
+        return (null=== $projetcs)
+            ? $this-> error404()
+            : new JsonResponse( ['projects' => $projetcs],Response::HTTP_OK);
+    }
+    /**
+     * @Route(path="/user/enabled/{user_id}", name="getc_project_user_enabled", methods={ Request::METHOD_GET })
+     * @return Response
+     */
+    public function getCProjectUserEnabled($user_id):Response{
+        $em=$this->getDoctrine()->getManager();
+        /** @var User $user */
+        $user=$this->getDoctrine()->getManager()->getRepository(User::class)->find($user_id);
+        if($user===null){
+            return $this->error400();
+        }
+        /** * @var Project[] $projetcs */
+        $projetcs = $em->getRepository(Project::class)-> findBy(array('user' => $user, 'enabled' => true));
+
+        return (null=== $projetcs)
+            ? $this-> error404()
+            : new JsonResponse( ['projects' => $projetcs],Response::HTTP_OK);
+    }
+
 
 
     private function error422() : JsonResponse
@@ -98,6 +167,18 @@ class ApiProjectController extends AbstractController
         return new JsonResponse(
             $mensaje,
             Response::HTTP_BAD_REQUEST
+        );
+    }
+
+    private function error404() : JsonResponse
+    {
+        $mensaje=[
+            'code'=> Response::HTTP_NOT_FOUND,
+            'mensaje' => 'Not found resource not found'
+        ];
+        return new JsonResponse(
+            $mensaje,
+            Response::HTTP_NOT_FOUND
         );
     }
 }
