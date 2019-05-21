@@ -80,11 +80,11 @@ class ApiProjectControllerTest extends WebTestCase
     /**
      * Implements testPostResult201
      * @throws \Exception
-     * @return int
+     * @return array
      * @covers ::postProject
      */
 
-    public function testPostResult201(): int
+    public function testPostResult201(): array
     {
         $randomico=random_int(100,1000);
         $title ='title '.$randomico;
@@ -114,7 +114,8 @@ class ApiProjectControllerTest extends WebTestCase
         );
         $cuerpo = self::$client->getResponse()->getContent();
         $datosProject = json_decode($cuerpo, true);
-        return $datosProject['project']['id'];
+        return $datosProject['project'];
+
     }
 
     /**
@@ -187,5 +188,155 @@ class ApiProjectControllerTest extends WebTestCase
 
     }
 
+    /**
+     * @covers ::getCProject
+     */
+    public function testGetCProject200():void
+    {
+        self::$client->request(Request::METHOD_GET, ApiProjectController::PROJECT_API_PATH);
+        $cuerpo= self::$client->getResponse()->getContent();
+        self::assertJson($cuerpo);
+        /**
+         * @var array $datos
+         */
+        $datos= json_decode($cuerpo,true);
+        self::assertArrayHasKey("projects",$datos);
 
+    }
+    /**
+     * Implements getCProject404
+     * @covers ::getCProject
+     */
+    public function testGetCProject404()
+    {
+        self::$client->request(
+            request::METHOD_GET,
+            ApiProjectController::PROJECT_API_PATH . "/projec"
+        );
+        /** @var Response $response */
+        $response = self::$client->getResponse();
+        self::assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
+    }
+
+    /**
+     * Implements testGetProjectUnique200
+     * @param array $project
+     * @return int
+     *
+     * @covers ::getProjectUnique
+     * @depends  testPostResult201
+     */
+    public function testGetProjectUnique200(array $project): int
+    {
+        $id=$project['id'];
+        self::$client->request(
+            Request::METHOD_GET,
+            ApiProjectController::PROJECT_API_PATH . '/' . $id
+        );
+        self::assertEquals(
+            Response::HTTP_OK,
+            self::$client->getResponse()->getStatusCode()
+        );
+        $cuerpo = self::$client->getResponse()->getContent();
+        self::assertJson($cuerpo);
+        /** @var array $datos */
+        $datos = json_decode($cuerpo, true);
+        self::assertArrayHasKey('project', $datos);
+        self::assertEquals($id, $datos['project']['id']);
+
+        return $id;
+    }
+
+    /**
+     * @covers ::getCProjectEnabled
+     */
+    public function testgetCProjectEnabled200():void
+    {
+        self::$client->request(Request::METHOD_GET, ApiProjectController::PROJECT_API_PATH.
+                                                                ApiProjectController::ENABLED . '/'. 1);
+        $cuerpo= self::$client->getResponse()->getContent();
+        self::assertJson($cuerpo);
+        /**
+         * @var array $datos
+         */
+        $datos= json_decode($cuerpo,true);
+        self::assertArrayHasKey("projects",$datos);
+
+    }
+    /**
+     * Implements testGetUserUniqueUserName200
+     * @param array $project
+     *
+     * @covers ::getCProjectUser
+     * @depends  testPostResult201
+     */
+    public function testGetProjectUser200(array $project): void
+    {
+        $id=$project['id'];
+        $user_id=$project['user']['id'];
+        self::$client->request(
+            Request::METHOD_GET,
+            ApiProjectController::PROJECT_API_PATH . ApiProjectController::USERS .  '/'. $user_id
+        );
+        self::assertEquals(
+            Response::HTTP_OK,
+            self::$client->getResponse()->getStatusCode()
+        );
+        $cuerpo = self::$client->getResponse()->getContent();
+        self::assertJson($cuerpo);
+        /** @var array $datos */
+        $datos = json_decode($cuerpo, true);
+        self::assertArrayHasKey('projects', $datos);
+    }
+    /**
+     * Implements testGetProjectUser400
+     * @param string $username
+     *
+     * @covers ::getCProjectUser
+     * @dataProvider providerDataNotOk
+     */
+    public function testGetProjectUser400(string $user): void
+    {
+        self::$client->request(
+            Request::METHOD_GET,
+            ApiProjectController::PROJECT_API_PATH . ApiProjectController::USERS .  '/'. $user
+        );
+        self::assertEquals(
+            Response::HTTP_BAD_REQUEST,
+            self::$client->getResponse()->getStatusCode()
+        );
+
+    }
+    /**
+     * Implements testGetProjectUser400
+     *
+     *
+     * @covers ::getCProjectUser
+     * @dataProvider providerDataNotOk
+     */
+    public function testGetProjectUser404(): void
+    {
+        $user=$this->testPostUserAux();
+        self::$client->request(
+            Request::METHOD_GET,
+            ApiProjectController::PROJECT_API_PATH . ApiProjectController::USERS .  '/'. $user
+        );
+        self::assertEquals(
+            Response::HTTP_NOT_FOUND,
+            self::$client->getResponse()->getStatusCode()
+        );
+
+    }
+
+
+    /*** @return array */
+    public function providerDataNotOk():array {
+        $randomico=random_int(1000,20000);
+        $datanotOk1="valor 1".$randomico;
+        $datanotOk2="valor 2".$randomico;
+        return [
+            "datanotOk1"=>[$datanotOk1],
+            "datanotOk2"=>[$datanotOk2]
+        ];
+    }
 }

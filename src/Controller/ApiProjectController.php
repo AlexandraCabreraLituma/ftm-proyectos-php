@@ -29,7 +29,8 @@ class ApiProjectController extends AbstractController
 {
     //ruta de la api de project
     const PROJECT_API_PATH='/api/v1/projects';
-
+    const USERS = '/users';
+    const ENABLED = '/enabled';
     /**
      * @Route(path="", name="post",methods={Request::METHOD_POST})
      * @param Request $request
@@ -78,7 +79,6 @@ class ApiProjectController extends AbstractController
         $em=$this->getDoctrine()->getManager();
         /** * @var Project[] $projetcs */
         $projetcs =$em-> getRepository(Project::class)->findAll();
-       // $projetcs = $em->getRepository(Project::class)->findBy(['enabled' =>true]);
 
         return (null=== $projetcs)
             ? $this-> error404()
@@ -86,21 +86,35 @@ class ApiProjectController extends AbstractController
     }
 
     /**
-     * @Route(path="/enabled/", name="getc_project_enabled", methods={ Request::METHOD_GET })
-     * @return Response
+     * @Route(path="/{id}", name="get_project", methods={Request::METHOD_GET})
+     * @param Project $project
+     * @return JsonResponse
      */
-    public function getCProjectEnabled():Response{
+    public function getProjectUnique(?Project $project = null): JsonResponse
+    {
+        return (null == $project)
+            ? $this->error404()
+            : new JsonResponse(['project' => $project], Response::HTTP_OK);
+    }
+
+    /**
+     * @Route(path="/enabled/{enabled}", name="get_project_enabled", methods={Request::METHOD_GET})
+     * @return JsonResponse
+     */
+    public function getProjectEnabled($enabled): JsonResponse
+    {
         $em=$this->getDoctrine()->getManager();
         /** * @var Project[] $projetcs */
-        $projetcs = $em->getRepository(Project::class)->findBy(['enabled' =>true]);
+        $projetcs =$em-> getRepository(Project::class)->findBy(['enabled' =>$enabled]);
 
-        return (null=== $projetcs)
+        return (empty($projetcs))
             ? $this-> error404()
             : new JsonResponse( ['projects' => $projetcs],Response::HTTP_OK);
     }
 
+
     /**
-     * @Route(path="/user/{user_id}", name="getc_project_user", methods={ Request::METHOD_GET })
+     * @Route(path="/users/{user_id}", name="getc_project_user", methods={ Request::METHOD_GET })
      * @return Response
      */
     public function getCProjectUser($user_id):Response{
@@ -116,12 +130,13 @@ class ApiProjectController extends AbstractController
         /** * @var Project[] $projetcs */
         $projetcs = $em->getRepository(Project::class)->findBy(['user' =>$user]);
 
-        return (null=== $projetcs)
+        return (empty($projetcs))
             ? $this-> error404()
-            : new JsonResponse( ['projects' => $projetcs],Response::HTTP_OK);
+            : new JsonResponse( ['projects' => $projetcs]
+                ,Response::HTTP_OK);
     }
     /**
-     * @Route(path="/user/enabled/{user_id}", name="getc_project_user_enabled", methods={ Request::METHOD_GET })
+     * @Route(path="/users/enabled/{user_id}", name="getc_project_user_enabled", methods={ Request::METHOD_GET })
      * @return Response
      */
     public function getCProjectUserEnabled($user_id):Response{
@@ -134,7 +149,7 @@ class ApiProjectController extends AbstractController
         /** * @var Project[] $projetcs */
         $projetcs = $em->getRepository(Project::class)-> findBy(array('user' => $user, 'enabled' => true));
 
-        return (null=== $projetcs)
+        return (empty($projetcs))
             ? $this-> error404()
             : new JsonResponse( ['projects' => $projetcs],Response::HTTP_OK);
     }
