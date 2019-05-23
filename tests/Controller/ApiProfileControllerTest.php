@@ -97,4 +97,61 @@ class ApiProfileControllerTest extends WebTestCase
     }
 
 
+    /**
+     * Implements testGetProfileUser200
+     * @param array $profile
+     *
+     * @covers ::getCProfileUser
+     * @depends  testPostResult201
+     */
+    public function testGetProfileUser200(array $profile): void
+    {
+
+        $user_id=$$profile['user']['id'];
+        self::$client->request(
+            Request::METHOD_GET,
+            ApiProfileController::PROFILE_API_PATH . ApiProfileController::USERS .  '/'. $user_id
+        );
+        self::assertEquals(
+            Response::HTTP_OK,
+            self::$client->getResponse()->getStatusCode()
+        );
+        $cuerpo = self::$client->getResponse()->getContent();
+        self::assertJson($cuerpo);
+        /** @var array $datos */
+        $datos = json_decode($cuerpo, true);
+        self::assertArrayHasKey('profiles', $datos);
+    }
+    /**
+     * Implements testGetProjectUser400
+     * @param string $user
+     *
+     * @covers ::getCProfileUser
+     * @dataProvider providerDataNotOk
+     */
+    public function testGetProfileUser400(string $user): void
+    {
+        self::$client->request(
+            Request::METHOD_GET,
+            ApiProfileController::PROFILE_API_PATH . ApiProfileController::USERS .  '/'. $user
+        );
+        self::assertEquals(
+            Response::HTTP_BAD_REQUEST,
+            self::$client->getResponse()->getStatusCode()
+        );
+
+    }
+
+
+    /*** @return array */
+    public function providerDataNotOk():array {
+        $randomico=random_int(1000,20000);
+        $datanotOk1="valor 1".$randomico;
+        $datanotOk2="valor 2".$randomico;
+        return [
+            "datanotOk1"=>[$datanotOk1],
+            "datanotOk2"=>[$datanotOk2]
+        ];
+    }
+
 }
