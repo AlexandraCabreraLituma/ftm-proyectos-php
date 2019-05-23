@@ -264,7 +264,7 @@ class ApiProjectControllerTest extends WebTestCase
 
     }
     /**
-     * Implements testGetUserUniqueUserName200
+     * Implements testGetProjectUser200
      * @param array $project
      *
      * @covers ::getCProjectUser
@@ -290,7 +290,7 @@ class ApiProjectControllerTest extends WebTestCase
     }
     /**
      * Implements testGetProjectUser400
-     * @param string $username
+     * @param string $user
      *
      * @covers ::getCProjectUser
      * @dataProvider providerDataNotOk
