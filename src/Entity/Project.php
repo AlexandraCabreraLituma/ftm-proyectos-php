@@ -12,14 +12,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Project implements \JsonSerializable
 {
-
-
     /**
      * constructor.
      *
      * @param string $title title
      * @param string $description description
-     * @param string $specificObjectives specificObjectives
+     * @param string $keyWords keyWords
      * @param \DateTime $initialDate initialDate
      * @param \DateTime $finalDate finalDate
      * @param bool $enabled enabled
@@ -28,24 +26,22 @@ class Project implements \JsonSerializable
      */
     public function __construct(
         string $title,
-        string $description,string $specificObjectives,
+        string $description,string $keyWords,
         \DateTime $initialDate, \DateTime $finalDate,
         bool   $enabled,
         string $category,
-        User $user= null
+        User $user
     ) {
         $this->id = 0;
         $this->title = $title;
         $this->description = $description;
-        $this->specificObjectives = $specificObjectives;
+        $this->keyWords = $keyWords;
         $this->initialDate = $initialDate;
         $this->finalDate = $finalDate;
         $this->enabled = $enabled;
         $this->category = $category;
         $this->user = $user;
     }
-
-
     /**
      * @return int
      */
@@ -97,17 +93,17 @@ class Project implements \JsonSerializable
     /**
      * @return string
      */
-    public function getSpecificObjectives(): string
+    public function getKeyWords(): string
     {
-        return $this->specificObjectives;
+        return $this->keyWords;
     }
 
     /**
-     * @param string $specificObjectives
+     * @param string $keyWords
      */
-    public function setSpecificObjectives(string $specificObjectives): void
+    public function setKeyWords(string $keyWords): void
     {
-        $this->specificObjectives = $specificObjectives;
+        $this->keyWords = $keyWords;
     }
 
     /**
@@ -143,6 +139,22 @@ class Project implements \JsonSerializable
     }
 
     /**
+     * @return bool
+     */
+    public function isEnabled(): bool
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @param bool $enabled
+     */
+    public function setEnabled(bool $enabled): void
+    {
+        $this->enabled = $enabled;
+    }
+
+    /**
      * @return string
      */
     public function getCategory(): string
@@ -174,25 +186,6 @@ class Project implements \JsonSerializable
         $this->user = $user;
     }
     /**
-     * @return bool
-     */
-    public function isEnabled(): bool
-    {
-        return $this->enabled;
-    }
-
-
-
-
-    /**
-     * @param bool $enabled
-     */
-    public function setEnabled(bool $enabled): void
-    {
-        $this->enabled = $enabled;
-    }
-
-    /**
      * @var int
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
@@ -218,9 +211,9 @@ class Project implements \JsonSerializable
     /**
      * @var string
      *
-     * @ORM\Column(name="specific_objectives", type="text", length=65535, nullable=false)
+     * @ORM\Column(name="key_words", type="text", length=65535, nullable=false)
      */
-    private $specificObjectives;
+    private $keyWords;
 
     /**
      * @var \DateTime
@@ -236,17 +229,10 @@ class Project implements \JsonSerializable
      */
     private $finalDate;
 
-
     /**
-     * Enabled
+     * @var bool
      *
-     * @var boolean
-     *
-     * @ORM\Column(
-     *     name     = "enabled",
-     *     type     = "boolean",
-     *     nullable = false
-     *     )
+     * @ORM\Column(name="enabled", type="boolean", nullable=false)
      */
     private $enabled;
 
@@ -281,7 +267,7 @@ class Project implements \JsonSerializable
             'id'                  => $this->id,
             'title'               => utf8_encode($this->title),
             'description'         => utf8_encode($this->description),
-            'specific_objectives' => utf8_encode($this->specificObjectives),
+            'key_words'           => utf8_encode($this->keyWords),
             'initial_date'        => $this->initialDate->format('Y-m-d H:i:s'),
             'final_date'          => $this->finalDate->format('Y-m-d H:i:s'),
             'enabled'             => $this->enabled,
@@ -290,28 +276,4 @@ class Project implements \JsonSerializable
         );
 
     }
-
-    /**
-     * Implements __toString()
-     *
-     * @return string
-     * @link   http://php.net/manual/en/language.oop5.magic.php#language.oop5.magic.tostring
-     */
-    public function __toString(): string
-    {
-        return sprintf(
-            '%3d - %3d - %22s - %3d - %s - %s - %22s - %22s' ,
-            $this->id,
-            $this->title,
-            $this->description,
-            $this->user,
-            $this->initialDate->format('Y-m-d H:i:s'),
-            $this->finalDate->format('Y-m-d H:i:s'),
-            $this->enabled,
-            $this->$this->category
-
-
-        );
-    }
-
 }
