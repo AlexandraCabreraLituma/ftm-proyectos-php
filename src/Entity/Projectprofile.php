@@ -5,32 +5,30 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Projectsprofiles
+ * Projectprofile
  *
  * @ORM\Table(name="projectsprofiles", indexes={@ORM\Index(name="project_id", columns={"project_id"}), @ORM\Index(name="profile_id", columns={"profile_id"})})
  * @ORM\Entity
  */
-class Projectsprofiles implements \JsonSerializable
+class Projectprofile implements \JsonSerializable
 {
     /**
      * constructor.
      *
+     * @param string $state state
      * @param Project $project project
      * @param Profile $profile profile
-     * @param string $state state
-     *
      */
     public function __construct(
         Project $project,
         Profile $profile,
         string $state
-    ) {
+       ) {
         $this->id = 0;
         $this->project = $project;
         $this->profile = $profile;
         $this->state = $state;
     }
-
     /**
      * @return int
      */
@@ -142,9 +140,9 @@ class Projectsprofiles implements \JsonSerializable
     {
         return array(
             'id'                  => $this->id,
-            'project'             => $this->project,
-            'profile'             => $this->profile,
-            'state'               => utf8_encode($this->state),
+            'project'               => $this->project,
+            'profile'         => $this->profile,
+            'state'           => utf8_encode($this->state)
         );
 
     }
