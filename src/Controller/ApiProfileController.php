@@ -46,11 +46,11 @@ class ApiProfileController extends AbstractController
     }
 
     /**
-     * @Route(path="/{id}", name="get_project", methods={Request::METHOD_GET})
+     * @Route(path="/{id}", name="get_profile", methods={Request::METHOD_GET})
      * @param Profile $profile
      * @return JsonResponse
      */
-    public function getProjectUnique(?Profile $profile = null): JsonResponse
+    public function getProfileUnique(?Profile $profile = null): JsonResponse
     {
         return (null == $profile)
             ? $this->error404()
@@ -58,10 +58,10 @@ class ApiProfileController extends AbstractController
     }
 
     /**
-     * @Route(path="/users/{user_id}", name="getc_project_user", methods={ Request::METHOD_GET })
+     * @Route(path="/users/{user_id}", name="getc_profile_user", methods={ Request::METHOD_GET })
      * @return Response
      */
-    public function getCProjectUser($user_id):Response{
+    public function getCProfileUser($user_id):Response{
         $em=$this->getDoctrine()->getManager();
 
         /** @var User $user */
