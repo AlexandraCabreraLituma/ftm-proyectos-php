@@ -12,7 +12,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Profile implements \JsonSerializable
 {
-
     /**
      * constructor.
      *
@@ -38,8 +37,6 @@ class Profile implements \JsonSerializable
         $this->category = $category;
         $this->user = $user;
     }
-
-
     /**
      * @return int
      */
@@ -73,17 +70,17 @@ class Profile implements \JsonSerializable
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getDescription(): ?string
+    public function getDescription(): string
     {
         return $this->description;
     }
 
     /**
-     * @param string|null $description
+     * @param string $description
      */
-    public function setDescription(?string $description): void
+    public function setDescription(string $description): void
     {
         $this->description = $description;
     }
@@ -163,35 +160,35 @@ class Profile implements \JsonSerializable
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="text", length=65535, nullable=false)
+     * @ORM\Column(name="name", type="string", length=60, nullable=false)
      */
     private $name;
 
     /**
-     * @var string|null
+     * @var string
      *
-     * @ORM\Column(name="description", type="text", length=65535, nullable=true)
+     * @ORM\Column(name="description", type="string", length=60, nullable=false)
      */
     private $description;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="working-day", type="text", length=65535, nullable=false)
+     * @ORM\Column(name="working_day", type="string", length=60, nullable=false)
      */
     private $workingDay;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="nivel", type="text", length=65535, nullable=false)
+     * @ORM\Column(name="nivel", type="string", length=60, nullable=false)
      */
     private $nivel;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="category", type="text", length=65535, nullable=false)
+     * @ORM\Column(name="category", type="string", length=60, nullable=false)
      */
     private $category;
 
@@ -219,12 +216,10 @@ class Profile implements \JsonSerializable
             'id'                  => $this->id,
             'name'                => utf8_encode($this->name),
             'description'         => utf8_encode($this->description),
-            'working_day'         => utf8_encode($this->workingDay),
             'nivel'               => utf8_encode($this->nivel),
             'category'            => utf8_encode($this->category),
             'user'                => $this->user,
         );
 
     }
-
 }
