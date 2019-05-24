@@ -37,6 +37,91 @@ class ApiProfileControllerTest extends WebTestCase
         self::$client= static::createClient();
 
     }
+
+    /**-------- crear un usuario
+     * Implements testPostUserAux
+     * @throws \Exception
+     * @return int
+     * @covers ::postUsers
+     */
+    public function testPostUserAux(): int
+    {
+        $randomico=random_int(1000,20000);
+        $username = 'NuevoNombre ' .$randomico;
+        $password= 'pas' .$randomico;
+        $email= 'NuevoEmail' .$randomico;
+        $orcid= 'orcid'.$randomico;
+        $firstname= 'firstname'.$randomico;
+        $lastname='lastname'.$randomico;
+        $phone=$randomico;
+        $address='address'.$randomico;
+
+
+        $datos = [
+            'username' => $username,
+            'password' => $password,
+            'email' => $email. '@example.com',
+            'orcid'=>$orcid,
+            'firstname' =>$firstname,
+            'lastname'=>$lastname,
+            'phone' => $phone,
+            'address'=>$address
+        ];
+        self::$client->request(
+            Request::METHOD_POST,
+            ApiUserController::USER_API_PATH,
+            [], [], [], json_encode($datos)
+        );
+        self::assertEquals(
+            Response::HTTP_CREATED,
+            self::$client->getResponse()->getStatusCode()
+        );
+        $cuerpo = self::$client->getResponse()->getContent();
+        $datosUser = json_decode($cuerpo, true);
+        return $datosUser['user']['id'];
+    }
+    /**
+     * Implements testPostProfilet201
+     * @throws \Exception
+     * @return array
+     * @covers ::postProfile
+     */
+
+    public function testPostProfile201(): array
+    {
+        $randomico=random_int(100,1000);
+        $name ='name '.$randomico;
+        $description='description '.$randomico;
+        $working_day= 'working '.$randomico;
+        $nivel= 'nivel '.$randomico;
+        $user=$this->testPostUserAux();
+        $datos = [
+            'name' => $name,
+            'description'=>$description,
+            'working_day'=>$working_day,
+            'nivel'=> $nivel,
+            'user_id' => $user
+        ];
+
+        self::$client->request(
+            Request::METHOD_POST,
+            ApiProfileController::PROFILE_API_PATH,
+            [], [], [], json_encode($datos)
+        );
+        self::assertEquals(
+            Response::HTTP_CREATED,
+            self::$client->getResponse()->getStatusCode()
+        );
+        $cuerpo = self::$client->getResponse()->getContent();
+        $datosProject = json_decode($cuerpo, true);
+        return $datosProject['profile'];
+
+    }
+
+
+
+
+
     /**
      * @covers ::getCProfile
      */
