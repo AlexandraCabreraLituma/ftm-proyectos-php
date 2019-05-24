@@ -2,7 +2,10 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+
 
 /**
  * Project
@@ -21,15 +24,13 @@ class Project implements \JsonSerializable
      * @param \DateTime $initialDate initialDate
      * @param \DateTime $finalDate finalDate
      * @param bool $enabled enabled
-     * @param string $category category
      * @param User $user user
      */
     public function __construct(
         string $title,
         string $description,string $keyWords,
         \DateTime $initialDate, \DateTime $finalDate,
-        bool   $enabled,
-        string $category,
+        bool $enabled,
         User $user
     ) {
         $this->id = 0;
@@ -39,9 +40,11 @@ class Project implements \JsonSerializable
         $this->initialDate = $initialDate;
         $this->finalDate = $finalDate;
         $this->enabled = $enabled;
-        $this->category = $category;
         $this->user = $user;
     }
+
+
+
     /**
      * @return int
      */
@@ -155,22 +158,6 @@ class Project implements \JsonSerializable
     }
 
     /**
-     * @return string
-     */
-    public function getCategory(): string
-    {
-        return $this->category;
-    }
-
-    /**
-     * @param string $category
-     */
-    public function setCategory(string $category): void
-    {
-        $this->category = $category;
-    }
-
-    /**
      * @return User
      */
     public function getUser(): User
@@ -236,12 +223,6 @@ class Project implements \JsonSerializable
      */
     private $enabled;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="category", type="string", length=60, nullable=false)
-     */
-    private $category;
 
     /**
      * @var User
@@ -271,7 +252,6 @@ class Project implements \JsonSerializable
             'initial_date'        => $this->initialDate->format('Y-m-d H:i:s'),
             'final_date'          => $this->finalDate->format('Y-m-d H:i:s'),
             'enabled'             => $this->enabled,
-            'category'            => utf8_encode($this->category),
             'user'                => $this->user,
         );
 

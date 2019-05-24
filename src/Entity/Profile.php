@@ -19,14 +19,12 @@ class Profile implements \JsonSerializable
      * @param string $description description
      * @param string $workingDay workingDay
      * @param string $nivel nivel
-     * @param string $category category
      * @param User $user user
      */
     public function __construct(
         string $name,
         string $description,string $workingDay,
         string $nivel,
-        string $category,
         User $user
     ) {
         $this->id = 0;
@@ -34,7 +32,6 @@ class Profile implements \JsonSerializable
         $this->description = $description;
         $this->workingDay = $workingDay;
         $this->nivel = $nivel;
-        $this->category = $category;
         $this->user = $user;
     }
     /**
@@ -118,22 +115,6 @@ class Profile implements \JsonSerializable
     }
 
     /**
-     * @return string
-     */
-    public function getCategory(): string
-    {
-        return $this->category;
-    }
-
-    /**
-     * @param string $category
-     */
-    public function setCategory(string $category): void
-    {
-        $this->category = $category;
-    }
-
-    /**
      * @return User
      */
     public function getUser(): User
@@ -185,12 +166,6 @@ class Profile implements \JsonSerializable
      */
     private $nivel;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="category", type="string", length=60, nullable=false)
-     */
-    private $category;
 
     /**
      * @var User
@@ -217,7 +192,6 @@ class Profile implements \JsonSerializable
             'name'                => utf8_encode($this->name),
             'description'         => utf8_encode($this->description),
             'nivel'               => utf8_encode($this->nivel),
-            'category'            => utf8_encode($this->category),
             'user'                => $this->user,
         );
 

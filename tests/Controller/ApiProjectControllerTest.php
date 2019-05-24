@@ -90,7 +90,6 @@ class ApiProjectControllerTest extends WebTestCase
         $title ='title '.$randomico;
         $description='description '.$randomico;
         $key_words= 'key_words '.$randomico;
-        $category= 'category '.$randomico;
         $user=$this->testPostUserAux();
         $datos = [
             'title' => $title,
@@ -99,7 +98,6 @@ class ApiProjectControllerTest extends WebTestCase
             'initial_date'=> '',
             'final_date'=> '',
             'enabled'=> true,
-            'category'=> $category,
             'user_id' => $user
         ];
 
@@ -134,7 +132,6 @@ class ApiProjectControllerTest extends WebTestCase
             'initial_date'=> '',
             'final_date'=> '',
             'enabled'=> '',
-            'category'=> '',
             'user_id' => ''
         ];
 
@@ -163,7 +160,6 @@ class ApiProjectControllerTest extends WebTestCase
         $title ='title '.$randomico;
         $description='description '.$randomico;
         $key_words= 'key_words '.$randomico;
-        $category= 'category '.$randomico;
         $userNoExiste=$randomico;
         $datos = [
             'title' => $title,
@@ -172,7 +168,6 @@ class ApiProjectControllerTest extends WebTestCase
             'initial_date'=> '',
             'final_date'=> '',
             'enabled'=> true,
-            'category'=> $category,
             'user_id' => $userNoExiste
         ];
 
