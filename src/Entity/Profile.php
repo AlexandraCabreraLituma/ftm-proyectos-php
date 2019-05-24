@@ -191,6 +191,7 @@ class Profile implements \JsonSerializable
             'id'                  => $this->id,
             'name'                => utf8_encode($this->name),
             'description'         => utf8_encode($this->description),
+            'working_day'         => utf8_encode($this->workingDay),
             'nivel'               => utf8_encode($this->nivel),
             'user'                => $this->user,
         );

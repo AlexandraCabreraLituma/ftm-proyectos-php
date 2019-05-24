@@ -32,6 +32,46 @@ class ApiProfileController extends AbstractController
     const USERS = '/users';
 
     /**
+     * @Route(path="", name="post",methods={Request::METHOD_POST})
+     * @param Request $request
+     * @return Response
+     * @throws \Exception
+     */
+    public function postProfile(Request $request):Response{
+        $datosPeticion=$request->getContent();
+        $datos=json_decode($datosPeticion,true);
+
+        if(empty($datos['name']) || empty($datos['user_id'])|| empty($datos['description'])||empty($datos['working_day'])||empty($datos['nivel']))
+        {
+            return $this->error422();
+        }
+
+        /** @var User $user */
+        $user=$this->getDoctrine()->getManager()->getRepository(User::class)->find($datos['user_id']);
+
+        if($user===null){
+            return $this->error400();
+        }
+
+
+        /**
+         * @var Profile profile
+         */
+        $profile= new Profile($datos['name'],$datos['description'],
+                         $datos['working_day'],$datos['nivel'],$user);
+        $em=$this->getDoctrine()->getManager();
+        $em ->persist($profile);
+        $em->flush();
+        return new JsonResponse(
+            ["profile" => $profile],
+            Response::HTTP_CREATED
+        );
+
+    }
+
+
+
+    /**
      * @Route(path="", name="getc", methods={ Request::METHOD_GET })
      * @return Response
      */
@@ -109,4 +149,18 @@ class ApiProfileController extends AbstractController
             Response::HTTP_NOT_FOUND
         );
     }
+
+
+    private function error422() : JsonResponse
+    {
+        $mensaje=[
+            'code'=> Response::HTTP_UNPROCESSABLE_ENTITY,
+            'mensaje' => 'Unprocessable entity is left out'
+        ];
+        return new JsonResponse(
+            $mensaje,
+            Response::HTTP_UNPROCESSABLE_ENTITY
+        );
+    }
+
 }
