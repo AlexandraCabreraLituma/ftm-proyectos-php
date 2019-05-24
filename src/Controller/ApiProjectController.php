@@ -41,7 +41,7 @@ class ApiProjectController extends AbstractController
         $datosPeticion=$request->getContent();
         $datos=json_decode($datosPeticion,true);
 
-        if(empty($datos['title']) || empty($datos['user_id'])|| empty($datos['description'])||empty($datos['key_words'])||empty($datos['category']))
+        if(empty($datos['title']) || empty($datos['user_id'])|| empty($datos['description'])||empty($datos['key_words']))
         {
             return $this->error422();
         }
@@ -60,7 +60,7 @@ class ApiProjectController extends AbstractController
          */
         $project= new Project($datos['title'],$datos['description'],
                       $datos['key_words'], $initial_date,
-                      $final_date,$datos['enabled']??true,$datos['category'],$user);
+                      $final_date,$datos['enabled']??true,$user);
         $em=$this->getDoctrine()->getManager();
         $em ->persist($project);
         $em->flush();
