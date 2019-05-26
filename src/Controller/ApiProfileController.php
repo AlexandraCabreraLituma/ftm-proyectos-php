@@ -40,23 +40,16 @@ class ApiProfileController extends AbstractController
     public function postProfile(Request $request):Response{
         $datosPeticion=$request->getContent();
         $datos=json_decode($datosPeticion,true);
-
         if(empty($datos['name']) || empty($datos['user_id'])|| empty($datos['description'])||empty($datos['working_day'])||empty($datos['nivel']))
         {
             return $this->error422();
         }
-
         /** @var User $user */
         $user=$this->getDoctrine()->getManager()->getRepository(User::class)->find($datos['user_id']);
-
         if($user===null){
             return $this->error400();
         }
-
-
-        /**
-         * @var Profile profile
-         */
+        /*** @var Profile profile         */
         $profile= new Profile($datos['name'],$datos['description'],
                          $datos['working_day'],$datos['nivel'],$user);
         $em=$this->getDoctrine()->getManager();
@@ -66,10 +59,7 @@ class ApiProfileController extends AbstractController
             ["profile" => $profile],
             Response::HTTP_CREATED
         );
-
     }
-
-
 
     /**
      * @Route(path="", name="getc", methods={ Request::METHOD_GET })
@@ -79,7 +69,6 @@ class ApiProfileController extends AbstractController
         $em=$this->getDoctrine()->getManager();
         /** * @var Profile[] $profiles */
         $profiles =$em-> getRepository(Profile::class)->findAll();
-
         return (null=== $profiles)
             ? $this-> error404()
             : new JsonResponse( ['profiles' => $profiles],Response::HTTP_OK);
@@ -106,23 +95,17 @@ class ApiProfileController extends AbstractController
 
         /** @var User $user */
         $user=$this->getDoctrine()->getManager()->getRepository(User::class)->find($user_id);
-
         if($user===null){
             return $this->error400();
         }
-
         /** * @var Profile[] $profiles */
         $profiles = $em->getRepository(Profile::class)->findBy(['user' =>$user]);
-
         return (empty($profiles))
             ? $this-> error404()
             : new JsonResponse( ['profiles' => $profiles]
                 ,Response::HTTP_OK);
     }
-    /**
-     * @return JsonResponse
-     *
-     */
+    /** * @return JsonResponse */
     private function error400() : JsonResponse
     {
         $mensaje=[
@@ -134,10 +117,7 @@ class ApiProfileController extends AbstractController
             Response::HTTP_BAD_REQUEST
         );
     }
-    /**
-     * @return JsonResponse
-     *
-     */
+    /**  * @return JsonResponse     */
     private function error404() : JsonResponse
     {
         $mensaje=[
@@ -149,8 +129,7 @@ class ApiProfileController extends AbstractController
             Response::HTTP_NOT_FOUND
         );
     }
-
-
+    /**  * @return JsonResponse     */
     private function error422() : JsonResponse
     {
         $mensaje=[

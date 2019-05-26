@@ -81,7 +81,7 @@ class ApiProfileControllerTest extends WebTestCase
         return $datosUser['user']['id'];
     }
     /**
-     * Implements testPostProfilet201
+     * Implements testPostProfile201
      * @throws \Exception
      * @return array
      * @covers ::postProfile
@@ -118,10 +118,68 @@ class ApiProfileControllerTest extends WebTestCase
 
     }
 
+    /**
+     * Implements testPostProfile422
+     * @throws \Exception
+     * @covers ::postProfile
+     */
 
+    public function testPostProfile422(): void
+    {
 
+        $datos = [
+            'name' => '',
+            'description'=>'',
+            'working_day'=>'',
+            'nivel'=> '',
+            'user_id' => ''
+        ];
 
+        self::$client->request(
+            Request::METHOD_POST,
+            ApiProfileController::PROFILE_API_PATH,
+            [], [], [], json_encode($datos)
+        );
+        self::assertEquals(
+            Response::HTTP_UNPROCESSABLE_ENTITY,
+            self::$client->getResponse()->getStatusCode()
+        );
 
+    }
+
+    /**
+     * Implements testPostResult400
+     * @throws \Exception
+     * @covers ::postProfile
+     */
+
+    public function testPostProfile400(): void
+    {
+
+        $randomico=random_int(100,1000);
+        $name ='name '.$randomico;
+        $description='description '.$randomico;
+        $working_day= 'working '.$randomico;
+        $nivel= 'nivel '.$randomico;
+        $user='user'.$randomico;
+        $datos = [
+            'name' => $name,
+            'description'=>$description,
+            'working_day'=>$working_day,
+            'nivel'=> $nivel,
+            'user_id' => $user
+        ];
+        self::$client->request(
+            Request::METHOD_POST,
+            ApiProfileController::PROFILE_API_PATH,
+            [], [], [], json_encode($datos)
+        );
+        self::assertEquals(
+            Response::HTTP_BAD_REQUEST,
+            self::$client->getResponse()->getStatusCode()
+        );
+
+    }
     /**
      * @covers ::getCProfile
      */
@@ -130,9 +188,7 @@ class ApiProfileControllerTest extends WebTestCase
         self::$client->request(Request::METHOD_GET, ApiProfileController::PROFILE_API_PATH);
         $cuerpo= self::$client->getResponse()->getContent();
         self::assertJson($cuerpo);
-        /**
-         * @var array $datos
-         */
+        /*** @var array $datos */
         $datos= json_decode($cuerpo,true);
         self::assertArrayHasKey("profiles",$datos);
 
@@ -181,18 +237,36 @@ class ApiProfileControllerTest extends WebTestCase
         return $id;
     }
 
+    /**
+     * Implements testGetProfile404
+     *
+     * @covers ::getProfileUnique
+     */
+    public function testGetProfile404(): void
+    {
+        $id=random_int(3000,50000);
+        self::$client->request(
+            Request::METHOD_GET,
+            ApiProfileController::PROFILE_API_PATH . '/' . $id
+        );
+        self::assertEquals(
+            Response::HTTP_NOT_FOUND,
+            self::$client->getResponse()->getStatusCode()
+        );
+
+    }
 
     /**
      * Implements testGetProfileUser200
      * @param array $profile
      *
      * @covers ::getCProfileUser
-     * @depends  testPostResult201
+     * @depends  testPostProfile201
      */
     public function testGetProfileUser200(array $profile): void
     {
 
-        $user_id=$$profile['user']['id'];
+        $user_id=$profile['user']['id'];
         self::$client->request(
             Request::METHOD_GET,
             ApiProfileController::PROFILE_API_PATH . ApiProfileController::USERS .  '/'. $user_id
@@ -226,6 +300,25 @@ class ApiProfileControllerTest extends WebTestCase
         );
 
     }
+    /**
+     * Implements testGetProjectUser404
+     *
+     * @covers ::getCProfileUser
+     */
+    public function testGetProfileUser404(): void
+    {
+        $user=$this->testPostUserAux();
+        self::$client->request(
+            Request::METHOD_GET,
+            ApiProfileController::PROFILE_API_PATH . ApiProfileController::USERS .  '/'. $user
+        );
+        self::assertEquals(
+            Response::HTTP_NOT_FOUND,
+            self::$client->getResponse()->getStatusCode()
+        );
+
+    }
+
 
 
     /*** @return array */
