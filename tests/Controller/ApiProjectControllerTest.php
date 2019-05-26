@@ -184,6 +184,7 @@ class ApiProjectControllerTest extends WebTestCase
     }
 
     /**
+     * Implements testGetCProject200
      * @covers ::getCProject
      */
     public function testGetCProject200():void
@@ -241,22 +242,38 @@ class ApiProjectControllerTest extends WebTestCase
 
         return $id;
     }
+    /**
+     * Implements testGetProject404
+     *
+     * @covers ::getProjectUnique
+     */
+    public function testGetProject404(): void
+    {
+        $id=random_int(3000,50000);
+        self::$client->request(
+            Request::METHOD_GET,
+            ApiProjectController::PROJECT_API_PATH . '/' . $id
+        );
+        self::assertEquals(
+            Response::HTTP_NOT_FOUND,
+            self::$client->getResponse()->getStatusCode()
+        );
+
+    }
 
     /**
-     * @covers ::getCProjectEnabled
+     * Implements testGetCProjectEnabled200
+     * @covers ::getProjectEnabled
      */
-    public function testgetCProjectEnabled200():void
+    public function testGetCProjectEnabled200():void
     {
-        self::$client->request(Request::METHOD_GET, ApiProjectController::PROJECT_API_PATH.
-                                                                ApiProjectController::ENABLED . '/'. 1);
+        self::$client->request(Request::METHOD_GET,
+                                ApiProjectController::PROJECT_API_PATH. ApiProjectController::ENABLED . '/'. 1);
         $cuerpo= self::$client->getResponse()->getContent();
         self::assertJson($cuerpo);
-        /**
-         * @var array $datos
-         */
+        /**  * @var array $datos */
         $datos= json_decode($cuerpo,true);
         self::assertArrayHasKey("projects",$datos);
-
     }
     /**
      * Implements testGetProjectUser200
@@ -303,11 +320,8 @@ class ApiProjectControllerTest extends WebTestCase
 
     }
     /**
-     * Implements testGetProjectUser400
-     *
-     *
+     * Implements testGetProjectUser404
      * @covers ::getCProjectUser
-     * @dataProvider providerDataNotOk
      */
     public function testGetProjectUser404(): void
     {
@@ -323,6 +337,65 @@ class ApiProjectControllerTest extends WebTestCase
 
     }
 
+    /**
+     * Implements testGetProjectUserEnabled200
+     * @param array $project
+     *
+     * @covers ::getCProjectUserEnabled
+     * @depends  testPostResult201
+     */
+    public function testGetProjectUserEnabled200(array $project): void
+    {
+        $user_id=$project['user']['id'];
+        self::$client->request(
+            Request::METHOD_GET,
+            ApiProjectController::PROJECT_API_PATH . ApiProjectController::USERS . ApiProjectController::ENABLED .  '/'. $user_id
+        );
+        self::assertEquals(
+            Response::HTTP_OK,
+            self::$client->getResponse()->getStatusCode()
+        );
+        $cuerpo = self::$client->getResponse()->getContent();
+        self::assertJson($cuerpo);
+        /** @var array $datos */
+        $datos = json_decode($cuerpo, true);
+        self::assertArrayHasKey('projects', $datos);
+    }
+    /**
+     * Implements testGetProjectUserEnabled400
+     *
+     * @covers ::getCProjectUserEnabled
+     */
+    public function testGetProjectUserEnabled400(): void
+    {
+        $user_id=random_int(3000,50000);
+        self::$client->request(
+            Request::METHOD_GET,
+            ApiProjectController::PROJECT_API_PATH . ApiProjectController::USERS . ApiProjectController::ENABLED .  '/'. $user_id
+        );
+        self::assertEquals(
+            Response::HTTP_BAD_REQUEST,
+            self::$client->getResponse()->getStatusCode()
+        );
+
+    }
+    /**
+     * Implements testGetProjectUserEnabled404
+     * @covers ::getCProjectUserEnabled
+     */
+    public function testGetProjectUserEnabled404(): void
+    {
+        $user=$this->testPostUserAux();
+        self::$client->request(
+            Request::METHOD_GET,
+            ApiProjectController::PROJECT_API_PATH . ApiProjectController::USERS . ApiProjectController::ENABLED .  '/'. $user
+        );
+        self::assertEquals(
+            Response::HTTP_NOT_FOUND,
+            self::$client->getResponse()->getStatusCode()
+        );
+
+    }
 
     /*** @return array */
     public function providerDataNotOk():array {

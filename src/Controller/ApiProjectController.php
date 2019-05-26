@@ -80,7 +80,7 @@ class ApiProjectController extends AbstractController
         /** * @var Project[] $projetcs */
         $projetcs =$em-> getRepository(Project::class)->findAll();
 
-        return (null=== $projetcs)
+        return (empty($projetcs))
             ? $this-> error404()
             : new JsonResponse( ['projects' => $projetcs],Response::HTTP_OK);
     }
@@ -92,7 +92,7 @@ class ApiProjectController extends AbstractController
      */
     public function getProjectUnique(?Project $project = null): JsonResponse
     {
-        return (null == $project)
+        return (empty($project))
             ? $this->error404()
             : new JsonResponse(['project' => $project], Response::HTTP_OK);
     }
@@ -104,12 +104,11 @@ class ApiProjectController extends AbstractController
     public function getProjectEnabled($enabled): JsonResponse
     {
         $em=$this->getDoctrine()->getManager();
-        /** * @var Project[] $projetcs */
-        $projetcs =$em-> getRepository(Project::class)->findBy(['enabled' =>$enabled]);
-
-        return (empty($projetcs))
+        /** * @var Project[] $projects */
+        $projects =$em-> getRepository(Project::class)->findBy(['enabled' =>$enabled]);
+        return (empty($projects))
             ? $this-> error404()
-            : new JsonResponse( ['projects' => $projetcs],Response::HTTP_OK);
+            : new JsonResponse( ['projects' => $projects],Response::HTTP_OK);
     }
 
 
@@ -119,17 +118,14 @@ class ApiProjectController extends AbstractController
      */
     public function getCProjectUser($user_id):Response{
         $em=$this->getDoctrine()->getManager();
-
         /** @var User $user */
         $user=$this->getDoctrine()->getManager()->getRepository(User::class)->find($user_id);
 
         if($user===null){
             return $this->error400();
         }
-
         /** * @var Project[] $projetcs */
         $projetcs = $em->getRepository(Project::class)->findBy(['user' =>$user]);
-
         return (empty($projetcs))
             ? $this-> error404()
             : new JsonResponse( ['projects' => $projetcs]
