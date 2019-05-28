@@ -57,7 +57,7 @@ class ApiProjectProFileController extends AbstractController
         if($project===null || $profile===null){
             return $this->error400();
         }
-        $userProject= $project->getUser()->getId();
+        $userProject=$project->getUser()->getId();
         $userProfile=$profile->getUser()->getId();
 
         if($userProject!==$userProfile){
@@ -66,7 +66,7 @@ class ApiProjectProFileController extends AbstractController
                     'message' => 'User Id is Wrong',
                 ];
                 return new JsonResponse(
-                    $msg, 400
+                    $msg, 402
                 );
 
         }
