@@ -139,8 +139,8 @@ class Projectprofile implements \JsonSerializable
     public function jsonSerialize():array
     {
         return array(
-            'id'                  => $this->id,
-            'project'               => $this->project,
+            'id'              => $this->id,
+            'project'         => $this->project,
             'profile'         => $this->profile,
             'state'           => utf8_encode($this->state)
         );
