@@ -47,7 +47,6 @@ class ApiProjectProFileController extends AbstractController
         {
             return $this->error422();
         }
-
         /** @var Project $project */
         $project=$em->getRepository(Project::class)->find($datos['project_id']);
 
@@ -61,16 +60,8 @@ class ApiProjectProFileController extends AbstractController
         $userProfile=$profile->getUser()->getId();
 
         if($userProject!==$userProfile){
-                $msg = [
-                    'code' => Response::HTTP_BAD_REQUEST,
-                    'message' => 'User Id is Wrong',
-                ];
-                return new JsonResponse(
-                    $msg, 402
-                );
-
+             return $this->error403();
         }
-
         /** @var Projectprofile projectprofile */
         $projectprofileExist = $em->getRepository(Projectprofile::class)->findOneBy(array('project' => $project, 'profile' => $profile));
 
@@ -92,6 +83,10 @@ class ApiProjectProFileController extends AbstractController
 
     }
 
+    /**
+     * @return JsonResponse
+     ** @codeCoverageIgnore
+     */
     private function error422() : JsonResponse
     {
         $mensaje=[
@@ -107,7 +102,7 @@ class ApiProjectProFileController extends AbstractController
 
     /**
      * @return JsonResponse
-     *
+     ** @codeCoverageIgnore
      */
     private function error400() : JsonResponse
     {
@@ -121,6 +116,38 @@ class ApiProjectProFileController extends AbstractController
         );
     }
 
+
+
+    /**
+     * @return JsonResponse
+     * @codeCoverageIgnore
+     */
+    private function error403() : JsonResponse
+    {
+        $mensaje = [
+            'code' => Response::HTTP_FORBIDDEN,
+            'message' => 'User Id is Wrong',
+        ];
+        return new JsonResponse(
+            $mensaje, Response::HTTP_FORBIDDEN
+        );
+    }
+    /**
+     * Genera una respuesta 404
+     * @return JsonResponse
+     * @codeCoverageIgnore
+     */
+    private function error404() : JsonResponse
+    {
+        $mensaje=[
+            'code'=> Response::HTTP_NOT_FOUND,
+            'mensaje' => 'Not found resource not found'
+        ];
+        return new JsonResponse(
+            $mensaje,
+            Response::HTTP_NOT_FOUND
+        );
+    }
     /**
      * Genera una respuesta 409 - Duplicated 409
      * @return JsonResponse
@@ -128,12 +155,15 @@ class ApiProjectProFileController extends AbstractController
      */
     private function error409(): JsonResponse
     {
+
         $mensaje = [
             'code' => Response::HTTP_CONFLICT,
-            'message' => 'DUPLICATED PROJECT PROFILE',
+            'message' => 'Duplicated project profile',
         ];
         return new JsonResponse(
             $mensaje, Response::HTTP_CONFLICT
         );
     }
+
+
 }

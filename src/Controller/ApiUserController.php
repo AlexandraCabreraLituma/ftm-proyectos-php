@@ -49,7 +49,7 @@ class ApiUserController extends AbstractController
             $this->getDoctrine()->getManager()->getRepository(User::class)->findOneBy(['orcid' =>$datos['orcid']])
             )
         {
-            return $this->error400();
+            return $this->error409();
         }
         /*** @var User user */
         $user= new User($datos['username'],$datos['password'], $datos['email'],
@@ -165,7 +165,7 @@ class ApiUserController extends AbstractController
     {
         $mensaje=[
             'code'=> Response::HTTP_UNPROCESSABLE_ENTITY,
-            'mensaje' => 'Unprocessable entity Username, email, orcid or password is left out'
+            'mensaje' => 'Unprocessable entity is left out'
         ];
         return new JsonResponse(
             $mensaje,
@@ -176,13 +176,31 @@ class ApiUserController extends AbstractController
     {
         $mensaje=[
             'code'=> Response::HTTP_BAD_REQUEST,
-            'mensaje' => 'Bad Request Username or email or orcid already exists'
+            'mensaje' => 'Bad Request'
         ];
         return new JsonResponse(
             $mensaje,
             Response::HTTP_BAD_REQUEST
         );
     }
+
+    /**
+     * Genera una respuesta 409 - Duplicated 409
+     * @return JsonResponse
+     * @codeCoverageIgnore
+     */
+    private function error409(): JsonResponse
+    {
+
+        $mensaje = [
+            'code' => Response::HTTP_CONFLICT,
+            'message' => 'DUPLICATED RESOURCE',
+        ];
+        return new JsonResponse(
+            $mensaje, Response::HTTP_CONFLICT
+        );
+    }
+
 
 
 

@@ -192,4 +192,122 @@ class ApiProjecTProfilesControllerTest extends WebTestCase
     }
 
 
+
+    /**
+     * Implements testPostProjectProfile422
+     * @throws \Exception
+     * @covers ::postProjectProfile
+     */
+
+    public function testPostProjectProfile422(): void
+    {
+        $datos = [
+            'project_id'=>'',
+            'profile_id'=>'',
+            'state'=>true
+        ];
+        self::$client->request(
+            Request::METHOD_POST,
+            ApiProjectProFileController::PROJECT_PROFILE_API_PATH,
+            [], [], [], json_encode($datos)
+        );
+        self::assertEquals(
+            Response::HTTP_UNPROCESSABLE_ENTITY,
+            self::$client->getResponse()->getStatusCode()
+        );
+
+    }
+
+    /**
+     * Implements testPostProjectProfile400
+     * @throws \Exception
+     * @covers ::postProjectProfile
+     */
+
+    public function testPostProjectProfile400(): void
+    {
+
+        $randomico=random_int(100,1000);
+        $project_id ='project '.$randomico;
+        $profile_id='profile '.$randomico;
+        $datos = [
+            'project_id'=>$project_id,
+            'profile_id'=>$profile_id,
+            'state'=>true
+        ];
+
+        self::$client->request(
+            Request::METHOD_POST,
+            ApiProjectProFileController::PROJECT_PROFILE_API_PATH,
+            [], [], [], json_encode($datos)
+        );
+        self::assertEquals(
+            Response::HTTP_BAD_REQUEST,
+            self::$client->getResponse()->getStatusCode()
+        );
+
+    }
+    /**
+     * Implements testPostProjectProfile403
+     * @throws \Exception
+     * @covers ::postProjectProfile
+     */
+
+    public function testPostProjectProfile403(): void
+    {
+        $user=$this->testPostUserAux();
+        $user2=$this->testPostUserAux();
+        /** @var array $project */
+        $project=$this->testPostProjectAux($user);
+        /** @var array $profile  */
+        $profile=$this->testPostProfileAux($user2);
+        $datos = [
+            'project_id'=>$project['id'],
+            'profile_id'=>$profile['id'],
+            'state'=>true
+        ];
+
+        self::$client->request(
+            Request::METHOD_POST,
+            ApiProjectProFileController::PROJECT_PROFILE_API_PATH,
+            [], [], [], json_encode($datos)
+        );
+        self::assertEquals(
+            Response::HTTP_FORBIDDEN,
+            self::$client->getResponse()->getStatusCode()
+        );
+
+    }
+
+    /**
+     * Implements testPostProjectProfile409
+     * @throws \Exception
+     *
+     * @covers ::postProjectProfile
+     * @param array $projectprofile
+     * @depends  testPostProjectProfile201
+     */
+    public function testPostProjectProfile409(array $projectprofile): void
+    {
+
+        $datos= [
+            'project_id'=>$projectprofile['project']['id'],
+            'profile_id'=>$projectprofile['profile']['id'],
+            'state'=>true
+        ];
+
+        self::$client->request(
+            Request::METHOD_POST,
+            ApiProjectProFileController::PROJECT_PROFILE_API_PATH,
+            [], [], [], json_encode($datos)
+        );
+        self::assertEquals(
+            Response::HTTP_CONFLICT,
+            self::$client->getResponse()->getStatusCode()
+        );
+    }
+
+
+
+
 }
