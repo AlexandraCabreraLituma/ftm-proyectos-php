@@ -148,7 +148,10 @@ class ApiUserController extends AbstractController
                 ['userid'=>$user->getId()],
                 Response::HTTP_OK);
     }
-
+    /**
+     * @return JsonResponse
+     ** @codeCoverageIgnore
+     */
     private function error404() : JsonResponse
     {
         $mensaje=[
@@ -160,7 +163,10 @@ class ApiUserController extends AbstractController
             Response::HTTP_NOT_FOUND
         );
     }
-
+    /**
+     * @return JsonResponse
+     ** @codeCoverageIgnore
+     */
     private function error422() : JsonResponse
     {
         $mensaje=[
@@ -172,6 +178,10 @@ class ApiUserController extends AbstractController
             Response::HTTP_UNPROCESSABLE_ENTITY
         );
     }
+    /**
+     * @return JsonResponse
+     ** @codeCoverageIgnore
+     */
     private function error400() : JsonResponse
     {
         $mensaje=[

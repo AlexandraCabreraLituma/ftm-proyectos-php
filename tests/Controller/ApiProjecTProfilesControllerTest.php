@@ -87,8 +87,7 @@ class ApiProjecTProfilesControllerTest extends WebTestCase
      * @return array
      * @covers ::postProject
      */
-
-    public function testPostProjectAux($datosUser): array
+    public function PostProjectAux($datosUser): array
     {
         $randomico=random_int(100,1000);
         $title ='title '.$randomico;
@@ -120,13 +119,12 @@ class ApiProjecTProfilesControllerTest extends WebTestCase
     }
 
     /**
-     * Implements testPostProfileAux
+     * Implements PostProfileAux
      * @throws \Exception
      * @return array
      * @covers ::postProfile
-     */
-
-    public function testPostProfileAux($datosUser): array
+      */
+    public function PostProfileAux($datosUser): array
     {
         $randomico=random_int(100,1000);
         $name ='name '.$randomico;
@@ -162,14 +160,13 @@ class ApiProjecTProfilesControllerTest extends WebTestCase
      * @return array
      * @covers ::postProjectProfile
      */
-
     public function testPostProjectProfile201(): array
     {
         $user=$this->testPostUserAux();
         /** @var array $project */
-        $project=$this->testPostProjectAux($user);
+        $project=$this->PostProjectAux($user);
         /** @var array $profile  */
-        $profile=$this->testPostProfileAux($user);
+        $profile=$this->PostProfileAux($user);
         $datos = [
             'project_id'=>$project['id'],
             'profile_id'=>$profile['id'],
@@ -258,9 +255,9 @@ class ApiProjecTProfilesControllerTest extends WebTestCase
         $user=$this->testPostUserAux();
         $user2=$this->testPostUserAux();
         /** @var array $project */
-        $project=$this->testPostProjectAux($user);
+        $project=$this->PostProjectAux($user);
         /** @var array $profile  */
-        $profile=$this->testPostProfileAux($user2);
+        $profile=$this->PostProfileAux($user2);
         $datos = [
             'project_id'=>$project['id'],
             'profile_id'=>$profile['id'],

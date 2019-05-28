@@ -151,7 +151,10 @@ class ApiProjectController extends AbstractController
     }
 
 
-
+    /**
+     * @return JsonResponse
+     ** @codeCoverageIgnore
+     */
     private function error422() : JsonResponse
     {
         $mensaje=[
@@ -167,7 +170,7 @@ class ApiProjectController extends AbstractController
 
     /**
      * @return JsonResponse
-     *
+     ** @codeCoverageIgnore
      */
     private function error400() : JsonResponse
     {
@@ -180,7 +183,10 @@ class ApiProjectController extends AbstractController
             Response::HTTP_BAD_REQUEST
         );
     }
-
+    /**
+     * @return JsonResponse
+     ** @codeCoverageIgnore
+     */
     private function error404() : JsonResponse
     {
         $mensaje=[
