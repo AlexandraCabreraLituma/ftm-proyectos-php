@@ -80,13 +80,13 @@ class ApiUserControllerTest extends WebTestCase
 
 
     /**
-     * Implements testPostUser400 (los datos del usario ya existe)
+     * Implements testPostUser409 (los datos del usario ya existe)
      * (volvemos a intentar insertar los datos del usario existen, verificado el username, email y orcid)
      * @return void
      *
      * @covers ::postUsers
      */
-    public function testPostUser400(): void
+    public function testPostUser409(): void
     {
         $cuerpo = self::$client->getResponse()->getContent();
         $datosUser = json_decode($cuerpo, true);
@@ -108,7 +108,7 @@ class ApiUserControllerTest extends WebTestCase
             [], [], [], json_encode($userUser)
         );
         self::assertEquals(
-            Response::HTTP_BAD_REQUEST,
+            Response::HTTP_CONFLICT,
             self::$client->getResponse()->getStatusCode()
         );
     }

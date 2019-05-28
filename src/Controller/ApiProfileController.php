@@ -105,7 +105,10 @@ class ApiProfileController extends AbstractController
             : new JsonResponse( ['profiles' => $profiles]
                 ,Response::HTTP_OK);
     }
-    /** * @return JsonResponse */
+    /**
+     * @return JsonResponse
+     ** @codeCoverageIgnore
+     */
     private function error400() : JsonResponse
     {
         $mensaje=[
@@ -117,7 +120,10 @@ class ApiProfileController extends AbstractController
             Response::HTTP_BAD_REQUEST
         );
     }
-    /**  * @return JsonResponse     */
+    /**
+     * @return JsonResponse
+     ** @codeCoverageIgnore
+     */
     private function error404() : JsonResponse
     {
         $mensaje=[
@@ -129,7 +135,10 @@ class ApiProfileController extends AbstractController
             Response::HTTP_NOT_FOUND
         );
     }
-    /**  * @return JsonResponse     */
+    /**
+     * @return JsonResponse
+     ** @codeCoverageIgnore
+     */
     private function error422() : JsonResponse
     {
         $mensaje=[
