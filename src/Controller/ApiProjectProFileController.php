@@ -57,6 +57,20 @@ class ApiProjectProFileController extends AbstractController
         if($project===null || $profile===null){
             return $this->error400();
         }
+        $userProject= $project->getUser()->getId();
+        $userProfile=$profile->getUser()->getId();
+
+        if($userProject!==$userProfile){
+                $msg = [
+                    'code' => Response::HTTP_BAD_REQUEST,
+                    'message' => 'User Id is Wrong',
+                ];
+                return new JsonResponse(
+                    $msg, 400
+                );
+
+        }
+
         /** @var Projectprofile projectprofile */
         $projectprofileExist = $em->getRepository(Projectprofile::class)->findOneBy(array('project' => $project, 'profile' => $profile));
 
