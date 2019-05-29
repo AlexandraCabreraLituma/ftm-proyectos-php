@@ -13,6 +13,7 @@ use App\Entity\Profile;
 Use App\Entity\Projectprofile;
 use App\Entity\Project;
 
+use App\Entity\User;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -24,14 +25,16 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * Class ApiProjectProFileController
  * @package App\Controller
- * @Route(path=ApiProjectProFileController::PROJECT_PROFILE_API_PATH, name="api_project_profile")
+ * @Route(path=ApiProjectProFileController::PROJECT_PROFILE_API_PATH, name="api_project_profile_")
  *
  */
 class ApiProjectProFileController extends AbstractController
 {
     //ruta de la api de project profile
     const PROJECT_PROFILE_API_PATH='/api/v1/projectsProfiles';
-
+    const STATES = '/states';
+    const PROJECTS = '/projects';
+    const PROFILES='/profiles';
     /**
      * @Route(path="", name="post",methods={Request::METHOD_POST})
      * @param Request $request
@@ -82,6 +85,77 @@ class ApiProjectProFileController extends AbstractController
         );
 
     }
+    /**
+     * @Route(path="/{id}", name="get_project_profile", methods={Request::METHOD_GET})
+     * @param Projectprofile $projectprofile
+     * @return JsonResponse
+     */
+    public function getProjectProfileUnique(?Projectprofile $projectprofile = null): JsonResponse
+    {
+        return (empty($projectprofile))
+            ? $this->error404()
+            : new JsonResponse(['projectprofile' => $projectprofile],
+                Response::HTTP_OK);
+    }
+
+    /**
+     * @Route(path="/states/{state}", name="getc_enabled", methods={Request::METHOD_GET})
+     * @return JsonResponse
+     * @param boolean $state
+     */
+    public function getProjectProfileState($state): JsonResponse
+    {
+        $em=$this->getDoctrine()->getManager();
+        /** * @var Projectprofile[] projectprofile */
+        $projectprofile =$em-> getRepository(Projectprofile::class)->findBy(['state' =>$state]);
+        return (empty($projectprofile))
+            ? $this-> error404()
+            : new JsonResponse( ['projectsprofiles' => $projectprofile],
+                Response::HTTP_OK);
+    }
+
+    /**
+     * @Route(path="/projects/{project_id}", name="getc_project", methods={Request::METHOD_GET})
+     * @return JsonResponse
+     * @param int $project_id
+     */
+    public function getProjectProfileByProject(int $project_id): JsonResponse
+    {
+        $em=$this->getDoctrine()->getManager();
+        /** @var Project $project */
+        $project=$em->getRepository(Project::class)->find($project_id);
+        if($project===null){
+            return $this->error400();
+        }
+        /** * @var Projectprofile[] projectsprofiles */
+        $projectsprofiles =$em-> getRepository(Projectprofile::class)->findBy(['project' =>$project]);
+        return (empty($projectsprofiles))
+            ? $this-> error404()
+            : new JsonResponse( ['projectsprofiles' => $projectsprofiles],
+                Response::HTTP_OK);
+    }
+
+    /**
+     * @Route(path="/profiles/{profile_id}", name="getc_profile", methods={Request::METHOD_GET})
+     * @return JsonResponse
+     * @param int $profile_id
+     */
+    public function getProjectProfileByProfile(int $profile_id): JsonResponse
+    {
+        $em=$this->getDoctrine()->getManager();
+        /** @var Profile $profile */
+        $profile=$em->getRepository(Profile::class)->find($profile_id);
+
+        if($profile===null){
+            return $this->error400();
+        }
+        /** * @var Projectprofile[] projectsprofiles */
+        $projectsprofiles =$em-> getRepository(Projectprofile::class)->findBy(['profile' =>$profile]);
+        return (empty($projectsprofiles))
+            ? $this-> error404()
+            : new JsonResponse( ['projectsprofiles' => $projectsprofiles],
+                Response::HTTP_OK);
+    }
 
     /**
      * @return JsonResponse
@@ -117,7 +191,6 @@ class ApiProjectProFileController extends AbstractController
     }
 
 
-
     /**
      * @return JsonResponse
      * @codeCoverageIgnore
@@ -132,6 +205,8 @@ class ApiProjectProFileController extends AbstractController
             $mensaje, Response::HTTP_FORBIDDEN
         );
     }
+
+
     /**
      * Genera una respuesta 404
      * @return JsonResponse

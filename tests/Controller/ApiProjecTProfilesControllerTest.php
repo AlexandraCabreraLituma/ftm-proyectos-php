@@ -304,7 +304,207 @@ class ApiProjecTProfilesControllerTest extends WebTestCase
         );
     }
 
+    /**
+     * Implements testGetProjectProfileUnique200
+     * @param array $projectProfile
+     * @return int
+     *
+     * @covers ::getProjectProfileUnique
+     * @depends  testPostProjectProfile201
+     */
+    public function testGetProjectProfileUnique200(array $projectProfile): int
+    {
+        $id=$projectProfile['id'];
+        self::$client->request(
+            Request::METHOD_GET,
+            ApiProjectProFileController::PROJECT_PROFILE_API_PATH . '/' . $id
+        );
+        self::assertEquals(
+            Response::HTTP_OK,
+            self::$client->getResponse()->getStatusCode()
+        );
+        $cuerpo = self::$client->getResponse()->getContent();
+        self::assertJson($cuerpo);
+        /** @var array $datos */
+        $datos = json_decode($cuerpo, true);
+        self::assertArrayHasKey('projectprofile', $datos);
+        self::assertEquals($id, $datos['projectprofile']['id']);
 
+        return $id;
+    }
+    /**
+     * Implements testGetProjectProfileUnique404
+     *
+     * @covers ::getProjectProfileUnique
+     */
+    public function testGetProjectProfileUnique404(): void
+    {
+        $id=random_int(3000,50000);
+        self::$client->request(
+            Request::METHOD_GET,
+            ApiProjectProFileController::PROJECT_PROFILE_API_PATH . '/' . $id
+        );
+        self::assertEquals(
+            Response::HTTP_NOT_FOUND,
+            self::$client->getResponse()->getStatusCode()
+        );
+
+    }
+
+    /**
+     * Implements testGetCProjectEnabled200
+     * @covers ::getProjectProfileState
+     */
+    public function testGetCProjectProfileSatate200():void
+    {
+        self::$client->request(Request::METHOD_GET,
+            ApiProjectProFileController::PROJECT_PROFILE_API_PATH. ApiProjectProFileController::STATES . '/'. 1);
+        $cuerpo= self::$client->getResponse()->getContent();
+        self::assertJson($cuerpo);
+        /**  * @var array $datos */
+        $datos= json_decode($cuerpo,true);
+        self::assertArrayHasKey("projectsprofiles",$datos);
+    }
+
+    /**
+     * Implements testGetProjectProfileByProject200
+     * @param array $project
+     *
+     * @covers ::getProjectProfileByProject
+     * @depends  testPostProjectProfile201
+     */
+    public function testGetProjectProfileByProject200(array $projectProfile): void
+    {
+
+        $project_id=$projectProfile['project']['id'];
+        self::$client->request(
+            Request::METHOD_GET,
+            ApiProjectProFileController::PROJECT_PROFILE_API_PATH.
+                ApiProjectProFileController::PROJECTS .  '/'. $project_id
+        );
+        self::assertEquals(
+            Response::HTTP_OK,
+            self::$client->getResponse()->getStatusCode()
+        );
+        $cuerpo = self::$client->getResponse()->getContent();
+        self::assertJson($cuerpo);
+        /** @var array $datos */
+        $datos = json_decode($cuerpo, true);
+        self::assertArrayHasKey('projectsprofiles', $datos);
+    }
+
+    /**
+     * Implements testGetProjectProfileByProject400
+     *
+     * @covers ::getProjectProfileByProject
+     */
+    public function testGetProjectProfileByProject400(): void
+    {
+
+        $project_id=random_int(100000,200000);
+        self::$client->request(
+            Request::METHOD_GET,
+            ApiProjectProFileController::PROJECT_PROFILE_API_PATH.
+            ApiProjectProFileController::PROJECTS .  '/'. $project_id
+        );
+        self::assertEquals(
+            Response::HTTP_BAD_REQUEST,
+            self::$client->getResponse()->getStatusCode()
+        );
+
+    }
+    /**
+     * Implements testGetProjectProfileByProject404
+     *
+     * @covers ::getProjectProfileByProject
+     */
+    public function testGetProjectProfileByProject404(): void
+    {
+        $user=$this->testPostUserAux();
+        /** @var array $project */
+        $project=$this->PostProjectAux($user);
+
+        self::$client->request(
+            Request::METHOD_GET,
+            ApiProjectProFileController::PROJECT_PROFILE_API_PATH.
+            ApiProjectProFileController::PROJECTS .  '/'. $project['id']
+        );
+        self::assertEquals(
+            Response::HTTP_NOT_FOUND,
+            self::$client->getResponse()->getStatusCode()
+        );
+
+    }
+
+    /**
+     * Implements testGetProjectProfileByProfile200
+     * @param array $project
+     *
+     * @covers ::getProjectProfileByProfile
+     * @depends  testPostProjectProfile201
+     */
+    public function testGetProjectProfileByProfile200(array $projectProfile): void
+    {
+
+        $profile_id=$projectProfile['profile']['id'];
+        self::$client->request(
+            Request::METHOD_GET,
+            ApiProjectProFileController::PROJECT_PROFILE_API_PATH.
+            ApiProjectProFileController::PROFILES .  '/'. $profile_id
+        );
+        self::assertEquals(
+            Response::HTTP_OK,
+            self::$client->getResponse()->getStatusCode()
+        );
+        $cuerpo = self::$client->getResponse()->getContent();
+        self::assertJson($cuerpo);
+        /** @var array $datos */
+        $datos = json_decode($cuerpo, true);
+        self::assertArrayHasKey('projectsprofiles', $datos);
+    }
+
+    /**
+     * Implements testGetProjectProfileByProject400
+     *
+     * @covers ::getProjectProfileByProfile
+     */
+    public function testGetProjectProfileByProfile400(): void
+    {
+
+        $profile_id=random_int(100000,200000);
+        self::$client->request(
+            Request::METHOD_GET,
+            ApiProjectProFileController::PROJECT_PROFILE_API_PATH.
+            ApiProjectProFileController::PROFILES .  '/'. $profile_id
+        );
+        self::assertEquals(
+            Response::HTTP_BAD_REQUEST,
+            self::$client->getResponse()->getStatusCode()
+        );
+
+    }
+    /**
+     * Implements testGetProjectProfileByProfile404
+     *
+     * @covers ::getProjectProfileByProfile
+     */
+    public function testGetProjectProfileByProfile404(): void
+    {
+        $user=$this->testPostUserAux();
+        /** @var array $project */
+        $profile=$this->PostProfileAux($user);
+
+        self::$client->request(
+            Request::METHOD_GET,
+            ApiProjectProFileController::PROJECT_PROFILE_API_PATH.
+            ApiProjectProFileController::PROFILES .  '/'. $profile['id']
+        );
+        self::assertEquals(
+            Response::HTTP_NOT_FOUND,
+            self::$client->getResponse()->getStatusCode()
+        );
+
+    }
 
 
 }
