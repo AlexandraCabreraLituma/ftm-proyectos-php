@@ -32,7 +32,9 @@ class ApiProjectProFileController extends AbstractController
 {
     //ruta de la api de project profile
     const PROJECT_PROFILE_API_PATH='/api/v1/projectsProfiles';
-    const ENABLED = '/enabled';
+    const STATES = '/states';
+    const PROJECTS = '/projects';
+    const PROFILES='/profiles';
     /**
      * @Route(path="", name="post",methods={Request::METHOD_POST})
      * @param Request $request
@@ -97,11 +99,11 @@ class ApiProjectProFileController extends AbstractController
     }
 
     /**
-     * @Route(path="/enabled/{state}", name="getc_enabled", methods={Request::METHOD_GET})
+     * @Route(path="/states/{state}", name="getc_enabled", methods={Request::METHOD_GET})
      * @return JsonResponse
      * @param boolean $state
      */
-    public function getProjectProfile($state): JsonResponse
+    public function getProjectProfileState($state): JsonResponse
     {
         $em=$this->getDoctrine()->getManager();
         /** * @var Projectprofile[] projectprofile */
@@ -122,7 +124,6 @@ class ApiProjectProFileController extends AbstractController
         $em=$this->getDoctrine()->getManager();
         /** @var Project $project */
         $project=$em->getRepository(Project::class)->find($project_id);
-
         if($project===null){
             return $this->error400();
         }
