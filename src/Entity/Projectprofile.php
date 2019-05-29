@@ -142,7 +142,7 @@ class Projectprofile implements \JsonSerializable
             'id'              => $this->id,
             'project'         => $this->project,
             'profile'         => $this->profile,
-            'state'           => utf8_encode($this->state)
+            'state'           => $this->state
         );
 
     }
