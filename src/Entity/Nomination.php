@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="nominations", indexes={@ORM\Index(name="project_profile_id", columns={"project_profile_id"}), @ORM\Index(name="user_id", columns={"user_id"})})
  * @ORM\Entity
  */
-class Nomination
+class Nomination implements \JsonSerializable
 {
     /**
      * constructor.
