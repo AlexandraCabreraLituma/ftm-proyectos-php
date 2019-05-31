@@ -195,7 +195,6 @@ class ApiProjecTProfilesControllerTest extends WebTestCase
      * @throws \Exception
      * @covers ::postProjectProfile
      */
-
     public function testPostProjectProfile422(): void
     {
         $datos = [
@@ -220,7 +219,6 @@ class ApiProjecTProfilesControllerTest extends WebTestCase
      * @throws \Exception
      * @covers ::postProjectProfile
      */
-
     public function testPostProjectProfile400(): void
     {
 

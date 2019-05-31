@@ -10,8 +10,13 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="nominations", indexes={@ORM\Index(name="project_profile_id", columns={"project_profile_id"}), @ORM\Index(name="user_id", columns={"user_id"})})
  * @ORM\Entity
  */
-class Nomination
+class Nomination implements \JsonSerializable
 {
+    public const NOMINATION_POSTULATED = 'postulated';
+    public const NOMINATION_ACCEPTED = 'accepted';
+    public const NOMINATION_REJECTED = 'rejected';
+
+    public const NOMINATION_STATES = [ self::NOMINATION_POSTULATED, self::NOMINATION_ACCEPTED,self::NOMINATION_REJECTED ];
     /**
      * constructor.
      *
