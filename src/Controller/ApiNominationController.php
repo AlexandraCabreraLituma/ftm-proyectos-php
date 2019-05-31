@@ -67,7 +67,7 @@ class ApiNominationController extends AbstractController
         }
 
         /** @var Nomination $nomination */
-        $nomination= new Nomination($project_profile, $user,$datos['state']?? 'POSTULATE');
+        $nomination= new Nomination($project_profile, $user,$datos['state']?? Nomination::NOMINATION_POSTULATED);
         $em=$this->getDoctrine()->getManager();
         $em ->persist($nomination);
         $em->flush();
@@ -124,8 +124,7 @@ class ApiNominationController extends AbstractController
         if (null === $nomination) {
             return $this->error404();
         }
-
-        $options="GET,PUT,DELETE,OPTIONS";
+        $options="POST,PATCH,GET,PUT,DELETE,OPTIONS";
         return new JsonResponse(null,Response::HTTP_OK ,["Allow" => $options]);
     }
 

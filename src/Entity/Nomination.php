@@ -12,6 +12,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Nomination implements \JsonSerializable
 {
+    public const NOMINATION_POSTULATED = 'postulated';
+    public const NOMINATION_ACCEPTED = 'accepted';
+    public const NOMINATION_REJECTED = 'rejected';
+
+    public const NOMINATION_STATES = [ self::NOMINATION_POSTULATED, self::NOMINATION_ACCEPTED,self::NOMINATION_REJECTED ];
     /**
      * constructor.
      *
