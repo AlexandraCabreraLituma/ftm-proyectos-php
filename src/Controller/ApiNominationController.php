@@ -114,6 +114,20 @@ class ApiNominationController extends AbstractController
         );
     }
 
+    /**
+     * @Route(path="/{id}", name="options_nomination", methods={ Request::METHOD_OPTIONS })
+     * @param Nomination|null $nomination
+     * @return Response
+     */
+    public function optionsNomination(?Nomination $nomination = null):Response{
+
+        if (null === $nomination) {
+            return $this->error404();
+        }
+
+        $options="GET,PUT,DELETE,OPTIONS";
+        return new JsonResponse(null,Response::HTTP_OK ,["Allow" => $options]);
+    }
 
     /**
      * @return JsonResponse
