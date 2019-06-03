@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 use Symfony\Component\Routing\Annotation\Route;
-
 /**
  * Class ApiProjectProFileController
  * @package App\Controller
@@ -154,6 +153,71 @@ class ApiProjectProFileController extends AbstractController
         return (empty($projectsprofiles))
             ? $this-> error404()
             : new JsonResponse( ['projectsprofiles' => $projectsprofiles],
+                Response::HTTP_OK);
+    }
+    /**
+     * @param Request $request
+     * @return Response
+     * @Route(path="/search", name="search", methods={"POST"})
+     */
+    public function searchProjectProfile(Request $request): Response{
+        $em = $this->getDoctrine()->getManager();
+        $dataRequest = $request->getContent();
+        $data = json_decode($dataRequest, true);
+        if (!empty($data['state'])){
+            $valorstate='p.state=?1';
+        }
+        else{
+            $valorstate='';
+        }
+        if (!empty($data['project_id'])){
+            $valorproject='p.project=?2';
+        }
+        else{
+            $valorproject='';
+        }
+
+
+        $valorprofile='p.profile=?3';
+
+        $query = $em->createQuery('SELECT p FROM App\Entity\Projectprofile p WHERE '.$valorstate.$valorproject.$valorprofile);
+        $query->setParameter('1',$data['state']);
+        $query->setParameter('2', $data['project_id']);
+        $query->setParameter('3', $data['profile_id']);
+        return new JsonResponse(
+            ['projectsprofiles'=>$query->getResult()],
+            Response::HTTP_OK);
+
+        /*
+        $query = $em->createQuery('SELECT p FROM App\Entity\Projectprofile p WHERE p.state=?1 and p.project= ?2');
+        $query->setParameter('1',$data['state']);
+        $query->setParameter('2',$data['project_id']);
+        if ($data['profile_id']!==null){
+            $query->setParameter('3', $data['profile_id']);
+        }
+        */
+
+        /*
+        if (empty($data['profile_id'])){
+            $query = $em->createQuery('SELECT p FROM App\Entity\Projectprofile p WHERE p.state=?1 and p.project= ?2');
+            $query->setParameter('1',$data['state']);
+            $query->setParameter('2',$data['project_id']);
+
+        } else{
+            $query = $em->createQuery('SELECT p FROM App\Entity\Projectprofile p WHERE p.state=?1 and p.project= ?2 and p.profile=?3');
+            $query->setParameter('1',$data['state']);
+            $query->setParameter('2', $data['project_id']);
+            $query->setParameter('3', $data['profile_id']);
+
+        }*/
+
+        /** * @var Projectprofile[] $projectsprofiles */
+        $projectsprofiles = $query->getResult();
+
+        return (empty($projectsprofiles))
+            ? $this->error404()
+            : new JsonResponse(
+                ['projectsprofiles'=>$projectsprofiles],
                 Response::HTTP_OK);
     }
 
