@@ -300,5 +300,56 @@ class ApiNominationControllerTest extends WebTestCase
         );
     }
 
+    /**
+     * Implements testGetProjectUser200
+     * @param array $project
+     *
+     * @covers ::getCNominationUser
+     * @depends  testPostNomination201
+     */
+    public function testGetNominationByUser200(array $project): void
+    {
+
+        $user_id=$project['user']['id'];
+        self::$client->request(
+            Request::METHOD_GET,
+            ApiNominationController::NOMINATION_API_PATH . ApiNominationController::USERS .  '/'. $user_id
+        );
+        self::assertEquals(
+            Response::HTTP_OK,
+            self::$client->getResponse()->getStatusCode()
+        );
+        $cuerpo = self::$client->getResponse()->getContent();
+        self::assertJson($cuerpo);
+        /** @var array $datos */
+        $datos = json_decode($cuerpo, true);
+        self::assertArrayHasKey('nominations', $datos);
+    }
+
+    /**
+     * Implements testGetProjectUser200
+     * @param array $project
+     *
+     * @covers ::getCNominationByProjectsProfile
+     * @depends  testPostNomination201
+     */
+    public function testGetNominationByProjectsProfile200(array $project): void
+    {
+
+        $projectprofile=$project['projectprofile']['id'];
+        self::$client->request(
+            Request::METHOD_GET,
+            ApiNominationController::NOMINATION_API_PATH . ApiNominationController::PROJECTSPROFILES .  '/'. $projectprofile
+        );
+        self::assertEquals(
+            Response::HTTP_OK,
+            self::$client->getResponse()->getStatusCode()
+        );
+        $cuerpo = self::$client->getResponse()->getContent();
+        self::assertJson($cuerpo);
+        /** @var array $datos */
+        $datos = json_decode($cuerpo, true);
+        self::assertArrayHasKey('nominations', $datos);
+    }
 
 }
