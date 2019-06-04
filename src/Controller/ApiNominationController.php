@@ -78,7 +78,46 @@ class ApiNominationController extends AbstractController
 
     }
 
+    /**
+     * @Route(path="/users/{user_id}", name="getc_nomination_user", methods={ Request::METHOD_GET })
+     * @return Response
+     */
+    public function getCNominationUser($user_id):Response{
+        $em=$this->getDoctrine()->getManager();
+        /** @var User $user */
+        $user=$this->getDoctrine()->getManager()->getRepository(User::class)->find($user_id);
 
+        if($user===null){
+            return $this->error400();
+        }
+        /** * @var Nomination[] $nominations */
+        $nominations = $em->getRepository(Nomination::class)->findBy(['user' =>$user]);
+        return (empty($nominations))
+            ? $this-> error404()
+            : new JsonResponse( ['nominations' => $nominations]
+                ,Response::HTTP_OK);
+    }
+    /**
+     * @Route(path="/projectsprofiles/{id}", name="getc_nomination_project_profile", methods={ Request::METHOD_GET })
+     * @return Response
+     */
+    public function getCNominationByProjectsProfile($id):Response{
+        $em=$this->getDoctrine()->getManager();
+
+        /** @var Projectprofile $project_profile */
+        $project_profile=$em->getRepository(Projectprofile::class)->find($id);
+
+        if($project_profile===null){
+            return $this->error400();
+        }
+        /** * @var Nomination[] $nominations */
+        $nominations = $em->getRepository(Nomination::class)->findBy(['projectProfile' =>$project_profile]);
+
+       return (empty($nominations))
+            ? $this-> error404()
+            : new JsonResponse( ['nominations' => $nominations]
+                ,Response::HTTP_OK);
+    }
 
 
     /**
