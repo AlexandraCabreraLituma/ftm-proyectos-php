@@ -33,6 +33,8 @@ class ApiNominationController extends AbstractController
 {
     //ruta de la api de nominations
     const NOMINATION_API_PATH='/api/v1/nominations';
+    const USERS = '/users';
+    const PROJECTSPROFILES = '/projectsprofiles';
 
     /**
      * @Route(path="", name="post",methods={Request::METHOD_POST})
