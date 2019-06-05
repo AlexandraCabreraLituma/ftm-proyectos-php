@@ -195,6 +195,93 @@ class ApiProjectProFileController extends AbstractController
                 ['projectsprofiles'=>$projectsprofiles],
                 Response::HTTP_OK);
     }
+    /**
+     * @Route(path="/{id}", name="options_project_profile", methods={ Request::METHOD_OPTIONS })
+     * @param Projectprofile|null $projectprofile
+     * @return Response
+     */
+    public function optionsProjectProfile(?Projectprofile $projectprofile = null):Response{
+
+        if (null === $projectprofile) {
+            return $this->error404();
+        }
+        $options="POST,PATCH,GET,PUT,DELETE,OPTIONS";
+        return new JsonResponse(null,Response::HTTP_OK ,["Allow" => $options]);
+    }
+
+    /**
+     * @Route(path="/{id}",name="put",methods={Request::METHOD_PUT})
+     * @param Projectprofile|null $projectprofile
+     * @param Request $request
+     * @return Response
+     * @throws \Exception
+     */
+    public function putProjectProfile(?Projectprofile $projectprofile=null, Request $request):Response{
+        $em = $this->getDoctrine()->getManager();
+        if (null === $projectprofile) {
+            return $this->error404();
+        }
+        $datosPeticion=$request->getContent();
+        $datos=json_decode($datosPeticion,true);
+
+        if(empty($datos['project_id']) || empty($datos['profile_id']))
+        {
+            return $this->error422();
+        }
+        /** @var Project $project */
+        $project=$em->getRepository(Project::class)->find($datos['project_id']);
+
+        /** @var Profile $profile */
+        $profile=$em->getRepository(Profile::class)->find($datos['profile_id']);
+
+        if($project===null || $profile===null){
+            return $this->error400();
+        }
+        $userProject=$project->getUser()->getId();
+        $userProfile=$profile->getUser()->getId();
+
+        if($userProject!==$userProfile){
+            return $this->error403();
+        }
+
+        if (isset($datos['state'])){
+            $projectprofile->setState($datos['state']);
+        };
+
+
+        $projectprofile->setProfile($profile);
+        $projectprofile->setProject($project);
+        $em=$this->getDoctrine()->getManager();
+        $em ->merge($projectprofile);
+        $em->flush();
+        return new JsonResponse(
+            ["projectprofile" => $projectprofile],
+            Response::HTTP_ACCEPTED
+
+        );
+
+    }
+
+    /**
+     * @Route(path="/{id}", name="delete", methods={ Request::METHOD_DELETE } )
+     * @param Projectprofile|null $projectprofile
+     * @return Response
+     */
+    public function deleteResult(?Projectprofile $projectprofile=null): Response
+    {
+        // No existe
+        if (null === $projectprofile) {
+            return $this->error404();
+        }
+
+        // Existe -> eliminar y devolver 204
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($projectprofile);
+        $em->flush();
+
+        return new Response(null, Response::HTTP_NO_CONTENT);
+    }
+
 
     /**
      * @return JsonResponse
