@@ -505,4 +505,196 @@ class ApiProjecTProfilesControllerTest extends WebTestCase
     }
 
 
+    /**
+     * Implements testPutProjectProfile202
+     * @throws \Exception
+     * @param array $project_profile
+     * @depends  testPostProjectProfile201
+     * @covers ::putProjectProfile
+     */
+    public function testPutProjectProfile202(array $project_profile): void
+    {
+        $id=$project_profile['id'];
+
+        $user=$this->testPostUserAux();
+        /** @var array $project */
+        $project=$this->PostProjectAux($user);
+        /** @var array $profile  */
+        $profile=$this->PostProfileAux($user);
+        $datos = [
+            'project_id'=>$project['id'],
+            'profile_id'=>$profile['id'],
+            'state'=>false
+        ];
+
+        self::$client->request(
+            Request::METHOD_PUT,
+            ApiProjectProFileController::PROJECT_PROFILE_API_PATH. '/' . $id,
+            [], [], [], json_encode($datos)
+        );
+        self::assertEquals(
+            Response::HTTP_ACCEPTED,
+            self::$client->getResponse()->getStatusCode()
+        );
+
+    }
+    /**
+
+     * @throws \Exception
+     * @param array $project_profile
+     * @depends  testPostProjectProfile201
+     * @covers ::putProjectProfile
+     */
+    public function testPutProjectProfile400(array $project_profile): void
+    {
+        $id=$project_profile['id'];
+
+        $randomico=random_int(1000,20000);
+        $project=$randomico;
+        $profile=$randomico;
+
+        $datos = [
+            'project_id'=>$project,
+            'profile_id'=>$profile,
+            'state'=>true
+        ];
+        self::$client->request(
+            Request::METHOD_PUT,
+            ApiProjectProFileController::PROJECT_PROFILE_API_PATH. '/' . $id,
+            [], [], [], json_encode($datos)
+        );
+        self::assertEquals(
+            Response::HTTP_BAD_REQUEST,
+            self::$client->getResponse()->getStatusCode()
+        );
+
+    }
+
+    /**
+     * Implements testPutProjectProfile202
+     * @throws \Exception
+     * @param array $project_profile
+     * @depends  testPostProjectProfile201
+     * @covers ::putProjectProfile
+     */
+    public function testPutProjectProfile403(array $project_profile): void
+    {
+        $id=$project_profile['id'];
+
+        $user=$this->testPostUserAux();
+        /** @var array $project */
+        $project=$this->PostProjectAux($user);
+        $user2=$this->testPostUserAux();
+        /** @var array $profile  */
+        $profile=$this->PostProfileAux($user2);
+        $datos = [
+            'project_id'=>$project['id'],
+            'profile_id'=>$profile['id'],
+            'state'=>false
+        ];
+
+        self::$client->request(
+            Request::METHOD_PUT,
+            ApiProjectProFileController::PROJECT_PROFILE_API_PATH. '/' . $id,
+            [], [], [], json_encode($datos)
+        );
+        self::assertEquals(
+            Response::HTTP_FORBIDDEN,
+            self::$client->getResponse()->getStatusCode()
+        );
+
+    }
+
+    /**
+     * Implements testPutProjectProfile404
+     * @throws \Exception
+     * @covers ::putProjectProfile
+     */
+    public function testPutProjectProfile404(): void
+    {
+        $randomico=random_int(1000,20000);
+        $id=$randomico;
+        $project=$randomico;
+        $profile=$randomico;
+
+        $datos = [
+            'project_id'=>$project,
+            'profile_id'=>$profile,
+            'state'=>true
+        ];
+        self::$client->request(
+            Request::METHOD_PUT,
+            ApiProjectProFileController::PROJECT_PROFILE_API_PATH. '/' . $id,
+            [], [], [], json_encode($datos)
+        );
+        self::assertEquals(
+            Response::HTTP_NOT_FOUND,
+            self::$client->getResponse()->getStatusCode()
+        );
+
+    }
+    /**
+
+     * @throws \Exception
+     * @param array $project_profile
+     * @depends  testPostProjectProfile201
+     * @covers ::putProjectProfile
+     */
+    public function testPutProjectProfile422(array $project_profile): void
+    {
+        $id=$project_profile['id'];
+        $datos = [
+            'project_id'=>'',
+            'profile_id'=>'',
+            'state'=>true
+        ];
+        self::$client->request(
+            Request::METHOD_PUT,
+            ApiProjectProFileController::PROJECT_PROFILE_API_PATH. '/' . $id,
+            [], [], [], json_encode($datos)
+        );
+        self::assertEquals(
+            Response::HTTP_UNPROCESSABLE_ENTITY,
+            self::$client->getResponse()->getStatusCode()
+        );
+
+    }
+
+    /**
+     * @throws \Exception
+     * @covers ::optionsProjectProfile
+     * @param array $project_profile
+     * @depends  testPostProjectProfile201
+     * @return void
+     */
+    public function testOptionsProjectProfile200(array $project_profile):void
+    {
+        $id=$project_profile['id'];
+
+        self::$client->request(Request::METHOD_OPTIONS, ApiProjectProFileController::PROJECT_PROFILE_API_PATH. '/' . $id);
+        self::assertEquals(
+            Response::HTTP_OK,
+            self::$client->getResponse()->getStatusCode()
+        );
+
+    }
+    /**
+     * @throws \Exception
+     * @covers ::optionsProjectProfile
+     * @return void
+     */
+    public function testOptionsProjectProfile404():void
+    {
+        $randomico=random_int(1000,20000);
+        $id=$randomico;
+        self::$client->request(Request::METHOD_OPTIONS, ApiProjectProFileController::PROJECT_PROFILE_API_PATH. '/' . $id);
+        self::assertEquals(
+            Response::HTTP_NOT_FOUND,
+            self::$client->getResponse()->getStatusCode()
+        );
+
+    }
+
+
+
 }
