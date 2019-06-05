@@ -327,16 +327,17 @@ class ApiNominationControllerTest extends WebTestCase
     }
 
     /**
-     * Implements testGetProjectUser200
-     * @param array $project
+     * Implements testGetNominationByProjectsProfile200
+     * @param array $nomination
      *
      * @covers ::getCNominationByProjectsProfile
      * @depends  testPostNomination201
      */
-    public function testGetNominationByProjectsProfile200(array $project): void
+    public function testGetNominationByProjectsProfile200(array $nomination): void
     {
 
-        $projectprofile=$project['projectprofile']['id'];
+        $projectprofile=$nomination['projectprofile']['id'];
+
         self::$client->request(
             Request::METHOD_GET,
             ApiNominationController::NOMINATION_API_PATH . ApiNominationController::PROJECTSPROFILES .  '/'. $projectprofile
@@ -352,4 +353,91 @@ class ApiNominationControllerTest extends WebTestCase
         self::assertArrayHasKey('nominations', $datos);
     }
 
+    /**
+     * Implements testPutNomination202
+     * @throws \Exception
+     * @param array $nomination
+     * @depends  testPostNomination201
+     * @covers ::putNomination
+     */
+    public function testPutNomination202(array $nomination): void
+    {
+        $id=$nomination['id'];
+        $projectprofile=$nomination['projectprofile']['id'];
+
+        /** @var array $user */
+        $user=$this->postUserAux();
+
+        $datos = [
+            'project_profile_id'=>$projectprofile,
+            'user_id'=>$user,
+            'state'=>'rejected'
+        ];
+        self::$client->request(
+            Request::METHOD_PUT,
+            ApiNominationController::NOMINATION_API_PATH. '/' . $id,
+            [], [], [], json_encode($datos)
+        );
+        self::assertEquals(
+            Response::HTTP_ACCEPTED,
+            self::$client->getResponse()->getStatusCode()
+        );
+
+    }
+    /**
+
+     * @throws \Exception
+     * @param array $nomination
+     * @depends  testPostNomination201
+     * @covers ::putNomination
+     */
+    public function testPutNomination400(array $nomination): void
+    {
+        $randomico=random_int(1000,20000);
+        $id=$nomination['id'];
+        $projectprofile=$randomico;
+        $user=$randomico;
+
+        $datos = [
+            'project_profile_id'=>$projectprofile,
+            'user_id'=>$user,
+            'state'=>'rejected'
+        ];
+        self::$client->request(
+            Request::METHOD_PUT,
+            ApiNominationController::NOMINATION_API_PATH. '/' . $id,
+            [], [], [], json_encode($datos)
+        );
+        self::assertEquals(
+            Response::HTTP_BAD_REQUEST,
+            self::$client->getResponse()->getStatusCode()
+        );
+
+    }
+    /**
+
+     * @throws \Exception
+     * @param array $nomination
+     * @depends  testPostNomination201
+     * @covers ::putResult
+     */
+    public function testPutNomination422(array $nomination): void
+    {
+        $id=$nomination['id'];
+        $datos = [
+            'project_profile_id'=>'',
+            'user_id'=>'',
+            'state'=>''
+        ];
+        self::$client->request(
+            Request::METHOD_PUT,
+            ApiNominationController::NOMINATION_API_PATH. '/' . $id,
+            [], [], [], json_encode($datos)
+        );
+        self::assertEquals(
+            Response::HTTP_UNPROCESSABLE_ENTITY,
+            self::$client->getResponse()->getStatusCode()
+        );
+
+    }
 }
