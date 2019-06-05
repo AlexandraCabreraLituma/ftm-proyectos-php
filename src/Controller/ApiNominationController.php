@@ -122,38 +122,6 @@ class ApiNominationController extends AbstractController
     }
 
 
-    /**
-     * Genera una respuesta 404
-     * @return JsonResponse
-     * @codeCoverageIgnore
-     */
-    private function error404() : JsonResponse
-    {
-        $mensaje=[
-            'code'=> Response::HTTP_NOT_FOUND,
-            'mensaje' => 'Not found resource not found'
-        ];
-        return new JsonResponse(
-            $mensaje,
-            Response::HTTP_NOT_FOUND
-        );
-    }
-    /**
-     * Genera una respuesta 409 - Duplicated 409
-     * @return JsonResponse
-     * @codeCoverageIgnore
-     */
-    private function error409(): JsonResponse
-    {
-
-        $mensaje = [
-            'code' => Response::HTTP_CONFLICT,
-            'message' => 'Duplicated nomination',
-        ];
-        return new JsonResponse(
-            $mensaje, Response::HTTP_CONFLICT
-        );
-    }
 
     /**
      * @Route(path="/{id}", name="options_nomination", methods={ Request::METHOD_OPTIONS })
@@ -167,6 +135,54 @@ class ApiNominationController extends AbstractController
         }
         $options="POST,PATCH,GET,PUT,DELETE,OPTIONS";
         return new JsonResponse(null,Response::HTTP_OK ,["Allow" => $options]);
+    }
+
+    /**
+     * @Route(path="/{id}",name="put",methods={Request::METHOD_PUT})
+     * @param Nomination|null $nomination
+     * @param Request $request
+     * @return Response
+     * @throws \Exception
+     */
+    public function putNomination(?Nomination $nomination = null, Request $request):Response{
+        $em = $this->getDoctrine()->getManager();
+        if (null === $nomination) {
+            return $this->error404();
+        }
+        $datosPeticion=$request->getContent();
+        $datos=json_decode($datosPeticion,true);
+
+        if(empty($datos['project_profile_id']) || empty($datos['user_id']))
+        {
+            return $this->error422();
+        }
+
+        /** @var Projectprofile $project_profile */
+        $project_profile=$em->getRepository(Projectprofile::class)->find($datos['project_profile_id']);
+
+        /** @var User $user */
+        $user=$em->getRepository(User::class)->find($datos['user_id']);
+
+        if($project_profile===null || $user===null){
+            return $this->error400();
+        }
+
+        if (isset($datos['state'])){
+            $nomination->setState($datos['state']);
+        };
+
+
+        $nomination->setUser($user);
+        $nomination->setProjectProfile($project_profile);
+        $em=$this->getDoctrine()->getManager();
+        $em ->merge($nomination);
+        $em->flush();
+        return new JsonResponse(
+            ["nomination" => $nomination],
+            Response::HTTP_ACCEPTED
+
+        );
+
     }
 
     /**
@@ -198,6 +214,38 @@ class ApiNominationController extends AbstractController
         return new JsonResponse(
             $mensaje,
             Response::HTTP_BAD_REQUEST
+        );
+    }
+    /**
+     * Genera una respuesta 404
+     * @return JsonResponse
+     * @codeCoverageIgnore
+     */
+    private function error404() : JsonResponse
+    {
+        $mensaje=[
+            'code'=> Response::HTTP_NOT_FOUND,
+            'mensaje' => 'Not found resource not found'
+        ];
+        return new JsonResponse(
+            $mensaje,
+            Response::HTTP_NOT_FOUND
+        );
+    }
+    /**
+     * Genera una respuesta 409 - Duplicated 409
+     * @return JsonResponse
+     * @codeCoverageIgnore
+     */
+    private function error409(): JsonResponse
+    {
+
+        $mensaje = [
+            'code' => Response::HTTP_CONFLICT,
+            'message' => 'Duplicated nomination',
+        ];
+        return new JsonResponse(
+            $mensaje, Response::HTTP_CONFLICT
         );
     }
 
