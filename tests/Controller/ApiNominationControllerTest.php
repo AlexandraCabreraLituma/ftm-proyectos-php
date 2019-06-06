@@ -487,4 +487,45 @@ class ApiNominationControllerTest extends WebTestCase
         );
 
     }
+
+
+    /**
+     * Implements testDeleteNomination204
+     * @param int $id
+     * @return void
+     *
+     * @covers ::deleteNomination
+     * @depends testGetNominationUnique200
+     */
+    public function testDeleteNomination204(int $id): void
+    {
+        self::$client->request(
+            Request::METHOD_DELETE,
+            ApiNominationController::NOMINATION_API_PATH. '/' . $id
+        );
+        self::assertEquals(
+            Response::HTTP_NO_CONTENT,
+            self::$client->getResponse()->getStatusCode()
+        );
+
+    }
+
+    /**
+     * @return void
+     *
+     * @covers ::deleteUser
+     * @throws \Exception
+     */
+    public function testDeleteNomination404(): void
+    {
+        $id=random_int(100000,20000000);
+        self::$client->request(
+            Request::METHOD_DELETE,
+            ApiNominationController::NOMINATION_API_PATH. '/' . $id
+        );
+        self::assertEquals(
+            Response::HTTP_NOT_FOUND,
+            self::$client->getResponse()->getStatusCode()
+        );
+    }
 }

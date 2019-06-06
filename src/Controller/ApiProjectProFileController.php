@@ -267,7 +267,7 @@ class ApiProjectProFileController extends AbstractController
      * @param Projectprofile|null $projectprofile
      * @return Response
      */
-    public function deleteResult(?Projectprofile $projectprofile=null): Response
+    public function deleteProjectProfile(?Projectprofile $projectprofile=null): Response
     {
         // No existe
         if (null === $projectprofile) {

@@ -199,6 +199,27 @@ class ApiNominationController extends AbstractController
     }
 
     /**
+     * @Route(path="/{id}", name="delete", methods={ Request::METHOD_DELETE } )
+     * @param Nomination|null $nomination
+     * @return Response
+     */
+    public function deleteNomination(?Nomination $nomination=null): Response
+    {
+        // No existe
+        if (null === $nomination) {
+            return $this->error404();
+        }
+
+        // Existe -> eliminar y devolver 204
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($nomination);
+        $em->flush();
+
+        return new Response(null, Response::HTTP_NO_CONTENT);
+    }
+
+
+    /**
      * @return JsonResponse
      ** @codeCoverageIgnore
      */
