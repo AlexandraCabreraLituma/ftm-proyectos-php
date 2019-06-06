@@ -299,6 +299,53 @@ class ApiNominationControllerTest extends WebTestCase
             self::$client->getResponse()->getStatusCode()
         );
     }
+    /**
+     * Implements testGetNominationUnique200
+     * @param array $nomination
+     * @return int
+     *
+     * @covers ::getNominationUnique
+     * @depends  testPostNomination201
+     */
+    public function testGetNominationUnique200(array $nomination): int
+    {
+        $id=$nomination['id'];
+        self::$client->request(
+            Request::METHOD_GET,
+            ApiNominationController::NOMINATION_API_PATH . '/' . $id
+        );
+        self::assertEquals(
+            Response::HTTP_OK,
+            self::$client->getResponse()->getStatusCode()
+        );
+        $cuerpo = self::$client->getResponse()->getContent();
+        self::assertJson($cuerpo);
+        /** @var array $datos */
+        $datos = json_decode($cuerpo, true);
+        self::assertArrayHasKey('nomination', $datos);
+        self::assertEquals($id, $datos['nomination']['id']);
+
+        return $id;
+    }
+    /**
+     * Implements testGetNominationUnique404
+     *
+     * @covers ::getNominationUnique
+     */
+    public function testGetNominationUnique404(): void
+    {
+        $id=random_int(3000,50000);
+        self::$client->request(
+            Request::METHOD_GET,
+            ApiNominationController::NOMINATION_API_PATH .'/' . $id
+        );
+        self::assertEquals(
+            Response::HTTP_NOT_FOUND,
+            self::$client->getResponse()->getStatusCode()
+        );
+
+    }
+
 
     /**
      * Implements testGetProjectUser200
