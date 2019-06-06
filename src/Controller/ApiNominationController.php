@@ -34,7 +34,7 @@ class ApiNominationController extends AbstractController
     //ruta de la api de nominations
     const NOMINATION_API_PATH='/api/v1/nominations';
     const USERS = '/users';
-    const PROJECTSPROFILES = '/projectsprofiles';
+    const PROJECTSPROFILES = '/projectsProfiles';
 
     /**
      * @Route(path="", name="post",methods={Request::METHOD_POST})
@@ -100,7 +100,7 @@ class ApiNominationController extends AbstractController
                 ,Response::HTTP_OK);
     }
     /**
-     * @Route(path="/projectsprofiles/{id}", name="getc_nomination_project_profile", methods={ Request::METHOD_GET })
+     * @Route(path="/projectsProfiles/{id}", name="getc_nomination_project_profile", methods={ Request::METHOD_GET })
      * @return Response
      */
     public function getCNominationByProjectsProfile($id):Response{
