@@ -79,6 +79,19 @@ class ApiNominationController extends AbstractController
         );
 
     }
+    /**
+     * @Route(path="/{id}", name="get_nomination", methods={Request::METHOD_GET})
+     * @param Nomination $nomination
+     * @return JsonResponse
+     */
+    public function getNominationUnique(?Nomination $nomination = null): JsonResponse
+    {
+        return (empty($nomination))
+            ? $this->error404()
+            : new JsonResponse(['nomination' => $nomination],
+                Response::HTTP_OK);
+    }
+
 
     /**
      * @Route(path="/users/{user_id}", name="getc_nomination_user", methods={ Request::METHOD_GET })
