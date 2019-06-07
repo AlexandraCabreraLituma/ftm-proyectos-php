@@ -487,7 +487,42 @@ class ApiNominationControllerTest extends WebTestCase
         );
 
     }
+    /**
+     * @throws \Exception
+     * @covers ::optionsNomination
+     * @param array $nomination
+     * @depends  testPostNomination201
+     * @return void
+     */
+    public function testOptionsNomination200(array $nomination):void
+    {
+        $id=$nomination['id'];
 
+        self::$client->request(Request::METHOD_OPTIONS,
+            ApiNominationController::NOMINATION_API_PATH. '/' . $id);
+        self::assertEquals(
+            Response::HTTP_OK,
+            self::$client->getResponse()->getStatusCode()
+        );
+
+    }
+    /**
+     * @throws \Exception
+     * @covers ::optionsNomination
+     * @return void
+     */
+    public function testOptionsNomination():void
+    {
+        $randomico=random_int(1000,20000);
+        $id=$randomico;
+        self::$client->request(Request::METHOD_OPTIONS,
+            ApiNominationController::NOMINATION_API_PATH. '/' . $id);
+        self::assertEquals(
+            Response::HTTP_NOT_FOUND,
+            self::$client->getResponse()->getStatusCode()
+        );
+
+    }
 
     /**
      * Implements testDeleteNomination204
@@ -513,7 +548,7 @@ class ApiNominationControllerTest extends WebTestCase
     /**
      * @return void
      *
-     * @covers ::deleteUser
+     * @covers ::deleteNomination
      * @throws \Exception
      */
     public function testDeleteNomination404(): void
@@ -528,4 +563,6 @@ class ApiNominationControllerTest extends WebTestCase
             self::$client->getResponse()->getStatusCode()
         );
     }
+
+
 }
