@@ -466,7 +466,7 @@ class ApiNominationControllerTest extends WebTestCase
      * @throws \Exception
      * @param array $nomination
      * @depends  testPostNomination201
-     * @covers ::putResult
+     * @covers ::putNomination
      */
     public function testPutNomination422(array $nomination): void
     {
