@@ -153,11 +153,10 @@ class ApiProjectControllerTest extends WebTestCase
      * @throws \Exception
      * @covers ::postProject
      */
-
     public function testPostProject400(): void
     {
 
-        $randomico=random_int(100,1000);
+        $randomico=random_int(10000000,1000000000);
         $title ='title '.$randomico;
         $description='description '.$randomico;
         $key_words= 'key_words '.$randomico;
