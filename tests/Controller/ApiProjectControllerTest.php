@@ -8,6 +8,7 @@
 
 namespace App\Tests\Controller;
 
+use DateTime;
 use PHPUnit\Framework\TestCase;
 
 use App\Controller\ApiUserController;
@@ -78,13 +79,13 @@ class ApiProjectControllerTest extends WebTestCase
         return $datosUser['user']['id'];
     }
     /**
-     * Implements testPostResult201
+     * Implements testPostProject201
      * @throws \Exception
      * @return array
      * @covers ::postProject
      */
 
-    public function testPostResult201(): array
+    public function testPostProject201(): array
     {
         $randomico=random_int(100,1000);
         $title ='title '.$randomico;
@@ -117,12 +118,12 @@ class ApiProjectControllerTest extends WebTestCase
     }
 
     /**
-     * Implements testPostResult422
+     * Implements testPostProject422
      * @throws \Exception
      * @covers ::postProject
      */
 
-    public function testPostResult422(): void
+    public function testPostProject422(): void
     {
 
         $datos = [
@@ -148,12 +149,12 @@ class ApiProjectControllerTest extends WebTestCase
     }
 
     /**
-     * Implements testPostResult400
+     * Implements testPostProject400
      * @throws \Exception
      * @covers ::postProject
      */
 
-    public function testPostResult400(): void
+    public function testPostProject400(): void
     {
 
         $randomico=random_int(100,1000);
@@ -220,7 +221,7 @@ class ApiProjectControllerTest extends WebTestCase
      * @return int
      *
      * @covers ::getProjectUnique
-     * @depends  testPostResult201
+     * @depends  testPostProject201
      */
     public function testGetProjectUnique200(array $project): int
     {
@@ -280,7 +281,7 @@ class ApiProjectControllerTest extends WebTestCase
      * @param array $project
      *
      * @covers ::getCProjectUser
-     * @depends  testPostResult201
+     * @depends  testPostProject201
      */
     public function testGetProjectUser200(array $project): void
     {
@@ -342,7 +343,7 @@ class ApiProjectControllerTest extends WebTestCase
      * @param array $project
      *
      * @covers ::getCProjectUserEnabled
-     * @depends  testPostResult201
+     * @depends  testPostProject201
      */
     public function testGetProjectUserEnabled200(array $project): void
     {
@@ -396,8 +397,159 @@ class ApiProjectControllerTest extends WebTestCase
         );
 
     }
+    /**
+     * Implements testPutProject202
+     * @throws \Exception
+     * @param array $project
+     * @depends  testPostProject201
+     * @covers ::putProject
+     */
+    public function testPutProject202(array $project): void
+    {
+        $id=$project['id'];
 
-    /*** @return array */
+
+        $randomico=random_int(10000,1000000);
+        $title ='title '.$randomico;
+        $description='description '.$randomico;
+        $key_words= 'key_words '.$randomico;
+        $initial_date=$project['initial_date'];
+        $final_date=$project['final_date'];
+        $user=$project['user']['id'];
+        $datos = [
+            'title' => $title,
+            'description'=>$description,
+            'key_words'=>$key_words,
+            'initial_date'=> $initial_date,
+            'final_date'=> $final_date,
+            'enabled'=> false,
+            'user_id' => $user
+        ];
+        self::$client->request(
+            Request::METHOD_PUT,
+            ApiProjectController::PROJECT_API_PATH . '/' . $id,
+            [], [], [], json_encode($datos)
+        );
+        self::assertEquals(
+            Response::HTTP_ACCEPTED,
+            self::$client->getResponse()->getStatusCode()
+        );
+
+    }
+    /**
+
+     * @throws \Exception
+     * @param array $project
+     * @depends  testPostProject201
+     * @covers ::putProject
+     */
+    public function testPutProject400(array $project): void
+    {
+
+        $id=$project['id'];
+
+        $randomico=random_int(10000,1000000);
+        $title ='title '.$randomico;
+        $description='description '.$randomico;
+        $key_words= 'key_words '.$randomico;
+        $initial_date=$project['initial_date'];
+        $final_date=$project['final_date'];
+        $user=$randomico;
+        $datos = [
+            'title' => $title,
+            'description'=>$description,
+            'key_words'=>$key_words,
+            'initial_date'=> $initial_date,
+            'final_date'=> $final_date,
+            'enabled'=> false,
+            'user_id' => $user
+        ];
+        self::$client->request(
+            Request::METHOD_PUT,
+            ApiProjectController::PROJECT_API_PATH . '/' . $id,
+            [], [], [], json_encode($datos)
+        );
+        self::assertEquals(
+            Response::HTTP_BAD_REQUEST,
+            self::$client->getResponse()->getStatusCode()
+        );
+
+    }
+
+    /**
+
+     * @throws \Exception
+     * @param array $project
+     * @depends  testPostProject201
+     * @covers ::putProject
+     */
+    public function testPutProject404(array $project): void
+    {
+        $randomico=random_int(10000,1000000);
+
+        $id=$randomico;
+        $title ='title '.$randomico;
+        $description='description '.$randomico;
+        $key_words= 'key_words '.$randomico;
+        $initial_date=$project['initial_date'];
+        $final_date=$project['final_date'];
+        $user=$project['user']['id'];
+        $datos = [
+            'title' => $title,
+            'description'=>$description,
+            'key_words'=>$key_words,
+            'initial_date'=> $initial_date,
+            'final_date'=> $final_date,
+            'enabled'=> false,
+            'user_id' => $user
+        ];
+        self::$client->request(
+            Request::METHOD_PUT,
+            ApiProjectController::PROJECT_API_PATH . '/' . $id,
+            [], [], [], json_encode($datos)
+        );
+        self::assertEquals(
+            Response::HTTP_NOT_FOUND,
+            self::$client->getResponse()->getStatusCode()
+        );
+
+    }
+    /**
+
+     * @throws \Exception
+     * @param array $project
+     * @depends  testPostProject201
+     * @covers ::putProject
+     */
+    public function testPutNomination422(array $project): void
+    {
+        $id=$project['id'];
+        $datos = [
+            'title' => '',
+            'description'=>'',
+            'key_words'=>'',
+            'initial_date'=> '',
+            'final_date'=> '',
+            'enabled'=> false,
+            'user_id' => ''
+        ];
+        self::$client->request(
+            Request::METHOD_PUT,
+            ApiProjectController::PROJECT_API_PATH .'/' . $id,
+            [], [], [], json_encode($datos)
+        );
+        self::assertEquals(
+            Response::HTTP_UNPROCESSABLE_ENTITY,
+            self::$client->getResponse()->getStatusCode()
+        );
+
+    }
+
+
+
+    /*** @return array
+     * @throws \Exception
+     */
     public function providerDataNotOk():array {
         $randomico=random_int(1000,20000);
         $datanotOk1="valor 1".$randomico;

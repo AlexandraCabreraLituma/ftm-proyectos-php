@@ -150,6 +150,63 @@ class ApiProjectController extends AbstractController
             : new JsonResponse( ['projects' => $projetcs],Response::HTTP_OK);
     }
 
+    /**
+     * @Route(path="/{id}",name="put",methods={Request::METHOD_PUT})
+     * @param Project|null $project
+     * @param Request $request
+     * @return Response
+     * @throws \Exception
+     */
+    public function putProject(?Project $project = null, Request $request):Response{
+        $em = $this->getDoctrine()->getManager();
+        if (null === $project) {
+            return $this->error404();
+        }
+        $datosPeticion=$request->getContent();
+        $datos=json_decode($datosPeticion,true);
+
+        if(empty($datos['title']) || empty($datos['user_id'])|| empty($datos['description'])||empty($datos['key_words']))
+        {
+            return $this->error422();
+        }
+
+        /** @var User $user */
+        $user=$em->getRepository(User::class)->find($datos['user_id']);
+
+        if($user===null){
+            return $this->error400();
+        }
+        if (isset($datos['title'])){
+            $project->setTitle($datos['title']);
+        };
+        if (isset($datos['description'])){
+            $project->setDescription($datos['description']);
+        };
+        if (isset($datos['key_words'])){
+            $project->setKeyWords($datos['key_words']);
+        };
+
+        if (isset($datos['enabled'])){
+            $project->setEnabled($datos['enabled']);
+        };
+        $initial_date =new DateTime($datos['initial_date']) ??new DateTime("now");
+        $project->setInitialDate($initial_date);
+
+        $final_date =new DateTime($datos['final_date']) ??new DateTime("now");
+        $project->setFinalDate($final_date);
+
+        $project->setUser($user);
+        $em=$this->getDoctrine()->getManager();
+        $em ->merge($project);
+        $em->flush();
+        return new JsonResponse(
+            ["project" => $project],
+            Response::HTTP_ACCEPTED
+
+        );
+
+    }
+
 
     /**
      * @return JsonResponse
