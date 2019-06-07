@@ -269,12 +269,9 @@ class ApiProjectProFileController extends AbstractController
      */
     public function deleteProjectProfile(?Projectprofile $projectprofile=null): Response
     {
-        // No existe
         if (null === $projectprofile) {
             return $this->error404();
         }
-
-        // Existe -> eliminar y devolver 204
         $em = $this->getDoctrine()->getManager();
         $em->remove($projectprofile);
         $em->flush();

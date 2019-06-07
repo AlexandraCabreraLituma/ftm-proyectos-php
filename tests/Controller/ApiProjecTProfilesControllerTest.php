@@ -687,13 +687,51 @@ class ApiProjecTProfilesControllerTest extends WebTestCase
     {
         $randomico=random_int(1000,20000);
         $id=$randomico;
-        self::$client->request(Request::METHOD_OPTIONS, ApiProjectProFileController::PROJECT_PROFILE_API_PATH. '/' . $id);
+        self::$client->request(Request::METHOD_OPTIONS,
+            ApiProjectProFileController::PROJECT_PROFILE_API_PATH. '/' . $id);
         self::assertEquals(
             Response::HTTP_NOT_FOUND,
             self::$client->getResponse()->getStatusCode()
         );
 
     }
+    /**
+     * Implements testDeleteProjectProfile204
+     * @param int $id
+     * @return void
+     *
+     * @covers ::deleteProjectProfile
+     * @depends testGetProjectProfileUnique200
+     */
+    public function testDeleteProjectProfile204(int $id): void
+    {
+        self::$client->request(
+            Request::METHOD_DELETE,
+            ApiProjectProFileController::PROJECT_PROFILE_API_PATH. '/' . $id);
+        self::assertEquals(
+            Response::HTTP_NO_CONTENT,
+            self::$client->getResponse()->getStatusCode()
+        );
+
+    }
+    /**
+     * @return void
+     *
+     * @covers ::deleteProjectProfile
+     * @throws \Exception
+     */
+    public function testDeleteProjectProfile404(): void
+    {
+        $id=random_int(100000,20000000);
+        self::$client->request(
+            Request::METHOD_DELETE,
+            ApiProjectProFileController::PROJECT_PROFILE_API_PATH. '/' . $id);
+              self::assertEquals(
+            Response::HTTP_NOT_FOUND,
+            self::$client->getResponse()->getStatusCode()
+        );
+    }
+
 
 
 
