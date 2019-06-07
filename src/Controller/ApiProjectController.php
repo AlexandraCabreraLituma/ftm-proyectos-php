@@ -209,6 +209,20 @@ class ApiProjectController extends AbstractController
 
 
     /**
+     * @Route(path="/{id}", name="options_project", methods={ Request::METHOD_OPTIONS })
+     * @param Project|null $project
+     * @return Response
+     */
+    public function optionsProject(?Project $project = null):Response{
+
+        if (null === $project) {
+            return $this->error404();
+        }
+        $options="POST,PATCH,GET,PUT,DELETE,OPTIONS";
+        return new JsonResponse(null,Response::HTTP_OK ,["Allow" => $options]);
+    }
+
+    /**
      * @return JsonResponse
      ** @codeCoverageIgnore
      */
