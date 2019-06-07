@@ -545,6 +545,40 @@ class ApiProjectControllerTest extends WebTestCase
 
     }
 
+    /**
+     * @throws \Exception
+     * @covers ::optionsProject
+     * @param array $project
+     * @depends  testPostProject201
+     * @return void
+     */
+    public function testOptionsProject200(array $project):void
+    {
+        $id=$project['id'];
+
+        self::$client->request(Request::METHOD_OPTIONS, ApiProjectController::PROJECT_API_PATH. '/' . $id);
+        self::assertEquals(
+            Response::HTTP_OK,
+            self::$client->getResponse()->getStatusCode()
+        );
+
+    }
+    /**
+     * @throws \Exception
+     * @covers ::optionsProject
+     * @return void
+     */
+    public function testOptionsProject404():void
+    {
+        $randomico=random_int(1000,20000);
+        $id=$randomico;
+        self::$client->request(Request::METHOD_OPTIONS, ApiProjectController::PROJECT_API_PATH. '/' . $id);
+        self::assertEquals(
+            Response::HTTP_NOT_FOUND,
+            self::$client->getResponse()->getStatusCode()
+        );
+
+    }
 
 
     /*** @return array
