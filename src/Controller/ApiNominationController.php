@@ -134,6 +134,34 @@ class ApiNominationController extends AbstractController
                 ,Response::HTTP_OK);
     }
 
+    /**
+     * @Route(path="/users/{user_id}/projectsProfiles/{id}", name="getc_nomination_user_project_profile", methods={ Request::METHOD_GET })
+     * @return Response
+     */
+    public function getCNominationByUserProjectsProfile($user_id, $id):Response{
+        $em=$this->getDoctrine()->getManager();
+        /** @var User $user */
+        $user=$this->getDoctrine()->getManager()->getRepository(User::class)->find($user_id);
+
+        if($user===null){
+            return $this->error400();
+        }
+        /** @var Projectprofile $project_profile */
+        $project_profile=$em->getRepository(Projectprofile::class)->find($id);
+
+        if($project_profile===null){
+            return $this->error400();
+        }
+        /** * @var Nomination[] $nominations */
+        $nominations = $em->getRepository(Nomination::class)->findBy(array('projectProfile'=>$project_profile, 'user'=>$user));
+
+
+        return (empty($nominations))
+            ? $this-> error404()
+            : new JsonResponse( ['nominations' => $nominations]
+                ,Response::HTTP_OK);
+    }
+
 
 
     /**
