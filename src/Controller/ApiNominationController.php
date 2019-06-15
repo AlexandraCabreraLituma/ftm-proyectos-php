@@ -142,20 +142,16 @@ class ApiNominationController extends AbstractController
         $em=$this->getDoctrine()->getManager();
         /** @var User $user */
         $user=$this->getDoctrine()->getManager()->getRepository(User::class)->find($user_id);
-
         if($user===null){
             return $this->error400();
         }
         /** @var Projectprofile $project_profile */
         $project_profile=$em->getRepository(Projectprofile::class)->find($id);
-
         if($project_profile===null){
             return $this->error400();
         }
         /** * @var Nomination[] $nominations */
         $nominations = $em->getRepository(Nomination::class)->findBy(array('projectProfile'=>$project_profile, 'user'=>$user));
-
-
         return (empty($nominations))
             ? $this-> error404()
             : new JsonResponse( ['nominations' => $nominations]
