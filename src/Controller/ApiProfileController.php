@@ -114,23 +114,20 @@ class ApiProfileController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $dataRequest = $request->getContent();
         $data = json_decode($dataRequest, true);
-
-
-        /*
-        if ($data['working_day']!= ""){
-            $valorWorkingDay=' and p.working_day=?3';
+       if ($data['working_day']!= ""){
+            $valorWorkingDay=' and p.workingDay=?3';
         }else{
             $valorWorkingDay='';
-        }*/
+        }
 
-        $query = $em->createQuery('SELECT p FROM App\Entity\Profile p INNER JOIN App\Entity\User u where p.user=u and u.id=?1 and p.name LIKE :search');
+        $query = $em->createQuery('SELECT p FROM App\Entity\Profile p INNER JOIN App\Entity\User u where p.user=u and u.id=?1 and p.name LIKE :search'.$valorWorkingDay);
         $query->setParameter('1', $data['user_id']??true);
         $query->setParameter('search','%'.$data['name'].'%');
 
-        /*
+
         if ($data['working_day']!= ""){
             $query->setParameter('3', $data['working_day']);
-        }*/
+        }
 
         /** * @var Profile[] $profiles */
         $profiles = $query->getResult();
