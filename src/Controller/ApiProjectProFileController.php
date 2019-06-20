@@ -196,6 +196,35 @@ class ApiProjectProFileController extends AbstractController
                 Response::HTTP_OK);
     }
     /**
+     * @param Request $request
+     * @return Response
+     * @Route(path="/search/advance", name="search_advance", methods={"POST"})
+     */
+    public function searchAdvanceProjectProfile(Request $request): Response{
+        $em = $this->getDoctrine()->getManager();
+        $dataRequest = $request->getContent();
+        $data = json_decode($dataRequest, true);
+
+
+        $query = $em->createQuery("SELECT pp FROM App\Entity\Projectprofile pp INNER JOIN App\Entity\Profile p INNER JOIN App\Entity\Project pro where pp.profile=p and pp.project=pro and pp.state=?1 and p.name LIKE :name and p.nivel LIKE :level and p.workingDay LIKE :workingDay and pro.title LIKE :title ");
+        $query->setParameter('1',$data['state']??true);
+        $query->setParameter('name','%'.$data['name'].'%');
+        $query->setParameter('level', '%'.$data['nivel'].'%');
+        $query->setParameter('workingDay', '%'.$data['working_day'].'%');
+        $query->setParameter('title', '%'.$data['title'].'%');
+
+         /** * @var Projectprofile[] $projectsprofiles */
+        $projectsprofiles = $query->getResult();
+
+        return (empty($projectsprofiles))
+            ? $this->error404()
+            : new JsonResponse(
+                ['projectsprofiles'=>$projectsprofiles],
+                Response::HTTP_OK);
+    }
+
+
+    /**
      * @Route(path="/{id}", name="options_project_profile", methods={ Request::METHOD_OPTIONS })
      * @param Projectprofile|null $projectprofile
      * @return Response
