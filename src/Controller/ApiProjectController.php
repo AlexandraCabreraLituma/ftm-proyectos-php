@@ -149,6 +149,35 @@ class ApiProjectController extends AbstractController
             ? $this-> error404()
             : new JsonResponse( ['projects' => $projetcs],Response::HTTP_OK);
     }
+    /**
+     * @param Request $request
+     * @return Response
+     * @Route(path="/search", name="search_advance", methods={"POST"})
+     */
+    public function searchAdvanceProject(Request $request): Response{
+        $em = $this->getDoctrine()->getManager();
+        $dataRequest = $request->getContent();
+        $data = json_decode($dataRequest, true);
+
+        $query = $em->createQuery('SELECT pro FROM App\Entity\Project pro INNER JOIN App\Entity\User u where pro.user=u and u.id=?1 and pro.enabled=?2 and pro.title LIKE :title  and pro.keyWords LIKE :key_words and pro.initialDate >= :fechaInicial and pro.finalDate >= :fechaFinal ');
+        $query->setParameter('1', $data['user_id']??true);
+        $query->setParameter('2',$data['state']??true);
+        $query->setParameter('title', '%'.$data['title'].'%');
+        $query->setParameter('key_words', '%'.$data['key_words'].'%');
+        $query->setParameter('fechaInicial',"'".$data['initial_date']."'");
+        $query->setParameter('fechaFinal',"'".$data['final_date']."'");
+
+
+        /** * @var Project[] $projects */
+        $projects = $query->getResult();
+
+        return (empty($projects))
+            ? $this->error404()
+            : new JsonResponse(
+                ['projects'=>$projects],
+                Response::HTTP_OK);
+    }
+
 
     /**
      * @Route(path="/{id}",name="put",methods={Request::METHOD_PUT})
