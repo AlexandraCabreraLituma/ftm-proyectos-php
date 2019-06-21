@@ -246,9 +246,9 @@ class Project implements \JsonSerializable
     {
         return array(
             'id'                  => $this->id,
-            'title'               => utf8_encode($this->title),
-            'description'         => utf8_encode($this->description),
-            'key_words'           => utf8_encode($this->keyWords),
+            'title'               => $this->title,
+            'description'         => $this->description,
+            'key_words'           => $this->keyWords,
             'initial_date'        => $this->initialDate->format('Y-m-d H:i:s'),
             'final_date'          => $this->finalDate->format('Y-m-d H:i:s'),
             'enabled'             => $this->enabled,

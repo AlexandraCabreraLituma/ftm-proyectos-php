@@ -282,13 +282,13 @@ class User implements \JsonSerializable
     {
         return array(
             'id'            => $this->id,
-            'username'      => utf8_encode($this->username),
-            'email'         => utf8_encode($this->email),
+            'username'      => $this->username,
+            'email'         => $this->email,
             'orcid'         => $this->orcid,
-            'firstname'     => utf8_encode($this->firstname),
-            'lastname'      => utf8_encode($this->lastname),
-            'phone'         => utf8_encode($this->phone),
-            'address'       => utf8_encode($this->address)
+            'firstname'     => $this->firstname,
+            'lastname'      => $this->lastname,
+            'phone'         => $this->phone,
+            'address'       => $this->address
         );
 
     }
