@@ -184,7 +184,7 @@ class Project implements \JsonSerializable
     /**
      * @var string
      *
-     * @ORM\Column(name="title", type="string", length=60, nullable=false)
+     * @ORM\Column(name="title",  type="text", length=65535,  nullable=false)
      */
     private $title;
 
