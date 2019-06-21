@@ -34,6 +34,8 @@ class ApiProjectProFileController extends AbstractController
     const STATES = '/states';
     const PROJECTS = '/projects';
     const PROFILES='/profiles';
+    const SEARCH = '/search';
+    const ADVANCE = '/advance';
     /**
      * @Route(path="", name="post",methods={Request::METHOD_POST})
      * @param Request $request
