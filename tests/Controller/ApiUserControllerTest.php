@@ -372,8 +372,8 @@ class ApiUserControllerTest extends WebTestCase
     public function testLogin201(): int
     {
         $datos = [
-            'username' => 'jason',
-            'password' => 'dedek454'
+            'username' => 'Alexandra',
+            'password' => '123456'
         ];
         self::$client->request(
             Request::METHOD_POST,
