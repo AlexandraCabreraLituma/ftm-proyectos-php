@@ -147,7 +147,7 @@ class Nomination implements \JsonSerializable
             'id'                  => $this->id,
             'projectprofile'      => $this->projectProfile,
             'user'                => $this->user,
-            'state'               => utf8_encode($this->state)
+            'state'               => $this->state
         );
 
     }
