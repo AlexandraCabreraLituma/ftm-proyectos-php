@@ -206,7 +206,7 @@ class ApiProjectProFileController extends AbstractController
         $data = json_decode($dataRequest, true);
 
 
-        $query = $em->createQuery("SELECT pp FROM App\Entity\Projectprofile pp INNER JOIN App\Entity\Profile p INNER JOIN App\Entity\Project pro where pp.profile=p and pp.project=pro and pp.state=?1 and p.name LIKE :name and p.nivel LIKE :level and p.workingDay LIKE :workingDay and pro.title LIKE :title and pro.initialDate >= :fechaInicial and pro.finalDate <= :fechaFinal ");
+        $query = $em->createQuery("SELECT pp FROM App\Entity\Projectprofile pp INNER JOIN App\Entity\Profile p INNER JOIN App\Entity\Project pro where pp.profile=p and pp.project=pro and pp.state=?1 and p.name LIKE :name and p.nivel LIKE :level and p.workingDay LIKE :workingDay and pro.title LIKE :title and pro.initialDate >= :fechaInicial and pro.finalDate >= :fechaFinal ");
         $query->setParameter('1',$data['state']??true);
         $query->setParameter('name','%'.$data['name'].'%');
         $query->setParameter('level', '%'.$data['nivel'].'%');
