@@ -611,7 +611,7 @@ class ApiProjectControllerTest extends WebTestCase
             [], [], [], json_encode($datos)
         );
         self::assertEquals(
-            Response::HTTP_NOT_FOUND,
+            Response::HTTP_OK,
             self::$client->getResponse()->getStatusCode()
         );
         $cuerpo = self::$client->getResponse()->getContent();
