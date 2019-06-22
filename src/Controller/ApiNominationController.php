@@ -137,6 +137,7 @@ class ApiNominationController extends AbstractController
     /**
      * @Route(path="/users/{user_id}/projectsProfiles/{id}", name="getc_nomination_user_project_profile", methods={ Request::METHOD_GET })
      * @return Response
+     * * @codeCoverageIgnore
      */
     public function getCNominationByUserProjectsProfile($user_id, $id):Response{
         $em=$this->getDoctrine()->getManager();
