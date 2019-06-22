@@ -30,7 +30,7 @@ class ApiProfileController extends AbstractController
     //ruta de la api de project
     const PROFILE_API_PATH='/api/v1/profiles';
     const USERS = '/users';
-
+    const SEARCH = '/search';
     /**
      * @Route(path="", name="post",methods={Request::METHOD_POST})
      * @param Request $request
