@@ -773,5 +773,38 @@ class ApiProjecTProfilesControllerTest extends WebTestCase
 
     }
 
+    /**
+     * Implements testSearchAdvanceProjectProfile200
+     * @param array $projectProfile
+     * @return void
+     * @throws \Exception
+     * @covers ::searchProjectProfile
+     * @depends testPostProjectProfile201
+     */
+    public function testSearchProjectProfile200(array $projectProfile): void
+    {
+        $project=$projectProfile['profile']['id'];
+        $profile=$projectProfile['project']['id'];
+
+        $datos = [
+            'project_id'=> $project,
+            'profile_id'=> $profile,
+            'state'=> true,
+        ];
+
+        self::$client->request(
+            Request::METHOD_POST,
+            ApiProjectProFileController::PROJECT_PROFILE_API_PATH. ApiProjectProFileController::SEARCH  ,
+            [], [], [], json_encode($datos)
+        );
+        self::assertEquals(
+            Response::HTTP_OK,
+            self::$client->getResponse()->getStatusCode()
+        );
+        $cuerpo = self::$client->getResponse()->getContent();
+        self::assertJson($cuerpo);
+
+    }
+
 
 }

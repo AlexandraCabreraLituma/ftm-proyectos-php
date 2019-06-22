@@ -319,6 +319,44 @@ class ApiProfileControllerTest extends WebTestCase
 
     }
 
+    /**
+     * Implements testSearchAProfile200
+     * @param array $profile
+     * @return void
+     * @throws \Exception
+     * @covers ::searchProfile
+     * @depends testPostProfile201
+     */
+    public function testSearchAProfile200(array $profile): void
+    {
+        $name=$profile['name'];
+        $nivel=$profile['nivel'];
+        $working_Day= $profile['working_day'];
+        $user= $profile['user']['id'];
+
+
+        $datos = [
+            'name'=> $name,
+            'nivel'=> $nivel,
+            'working_day'=> $working_Day,
+            'user_id'=> $user
+
+        ];
+
+        self::$client->request(
+            Request::METHOD_POST,
+            ApiProFileController::PROFILE_API_PATH. ApiProFileController::SEARCH ,
+            [], [], [], json_encode($datos)
+        );
+        self::assertEquals(
+            Response::HTTP_OK,
+            self::$client->getResponse()->getStatusCode()
+        );
+        $cuerpo = self::$client->getResponse()->getContent();
+        self::assertJson($cuerpo);
+
+    }
+
 
 
     /*** @return array */

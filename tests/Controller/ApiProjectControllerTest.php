@@ -587,7 +587,6 @@ class ApiProjectControllerTest extends WebTestCase
      * @covers ::searchAdvanceProject
      * @depends testPostProject201
      */
-
     public function testSearchProject200(array $project): void
     {
         $user=$project['user']['id'];
@@ -596,13 +595,14 @@ class ApiProjectControllerTest extends WebTestCase
         $initial_date =$project['initial_date'];
         $final_date =$project['final_date'];
 
+
         $datos = [
             'title' => $title,
             'key_words'=>$key_words,
             'initial_date'=> $initial_date,
             'final_date'=> $final_date,
             'enabled'=> true,
-            'user_id' => $user
+            'user_id'=> $user
         ];
 
         self::$client->request(
