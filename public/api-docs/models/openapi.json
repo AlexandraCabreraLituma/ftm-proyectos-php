@@ -10,6 +10,290 @@
     "version": "0.1.0"
   },
   "paths": {
+    "/projectsProfiles": {
+      "get": {
+        "tags": [
+          "ProjectsProfiles"
+        ],
+        "summary": "ProjectsProfiles all results",
+        "description": "ProjectsProfiles all results from the system that the result has access to.",
+        "operationId": "tfm_getc_projectsProfiles",
+        "responses": {
+          "200": {
+            "description": "Project array response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectsProfilesArray"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectsProfilesArray"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectsProfilesArray"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/404_Resource_Not_Found_Response"
+          }
+        },
+        "security": [
+          {
+            "UPM_API_Security": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "ProjectsProfiles"
+        ],
+        "summary": "Creates a new Project Profile",
+        "description": "Creates a new Projects Profiles",
+        "operationId": "tfm_post_projectsProfiles",
+        "responses": {
+          "201": {
+            "description": "`Created` Project Profile created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectProfile"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectProfile"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectProfile"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "`Unprocessable entity` entity is left out",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "UPM_API_Security": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProjectProfileData"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/ProjectData"
+              }
+            }
+          },
+          "description": "`User` properties to add to the system",
+          "required": true
+        }
+      }
+    },
+    "/projectsProfiles/{projectProfileId}": {
+      "get": {
+        "tags": [
+          "ProjectsProfiles"
+        ],
+        "summary": "Returns a project profile based on a single ID",
+        "description": "Returns the user identified by `projectProfileId`.",
+        "operationId": "tfm_get_project_profile",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/projectProfileId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Project",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectProfile"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectProfile"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectProfile"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/404_Resource_Not_Found_Response"
+          }
+        },
+        "security": [
+          {
+            "UPM_API_Security": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "ProjectsProfiles"
+        ],
+        "summary": "Updates a project pofile",
+        "description": "Updates the project identified by `projectProfileId`.",
+        "operationId": "miw_put_projectProfile",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/projectProfileId"
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "`Content Returned` Project Profile previously existed and is now updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectProfile"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectProfile"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectProfile"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`Bad Request` Project or Profile do not exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/404_Resource_Not_Found_Response"
+          },
+          "422": {
+            "description": "`Unprocessable entity` proyect or profile is left out",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "UPM_API_Security": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProjectProfileData"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/ProjectProfileData"
+              }
+            }
+          },
+          "description": "`ProjectProfile` data to update",
+          "required": true
+        }
+      },
+      "options": {
+        "tags": [
+          "ProjectsProfiles"
+        ],
+        "summary": "Provides the list of HTTP supported methods",
+        "description": "Return a `Allow` header with a list of HTTP supported methods.",
+        "operationId": "miw_options_projects_profiles_id",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/projectProfileId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "`Allow` header ",
+            "headers": {
+              "allow": {
+                "description": "List of HTTP supported methods",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`Not found resource not found`  "
+          }
+        }
+      }
+    },
     "/profiles": {
       "get": {
         "tags": [
@@ -1154,6 +1438,16 @@
           "format": "int11"
         }
       },
+      "projectProfileId": {
+        "name": "projectProfileId",
+        "in": "path",
+        "description": "ID of project profile",
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "format": "int11"
+        }
+      },
       "userName": {
         "name": "userName",
         "in": "path",
@@ -1393,6 +1687,39 @@
           }
         }
       },
+      "ProjectProfile": {
+        "required": [
+          "id",
+          "project_id",
+          "profile_id"
+        ],
+        "properties": {
+          "id": {
+            "description": "Project Profile Id",
+            "type": "integer",
+            "format": "int11"
+          },
+          "project_id": {
+            "description": "Project Profile project_id",
+            "type": "integer"
+          },
+          "profile_id": {
+            "description": "Project Profile profile_id",
+            "type": "integer"
+          },
+          "state": {
+            "description": "Denotes if project profile is enabled",
+            "type": "boolean"
+          }
+        },
+        "example": {
+          "projectProfile": {
+            "project_id": "Project id",
+            "profile_id": "Profile id",
+            "state": true
+          }
+        }
+      },
       "UserLogin": {
         "required": [
           "id"
@@ -1552,6 +1879,34 @@
           "nivel": "nivel"
         }
       },
+      "ProjectProfileData": {
+        "properties": {
+          "id": {
+            "description": "Project Profile Id",
+            "type": "integer",
+            "format": "int11"
+          },
+          "project_id": {
+            "description": "Project Profile project_id",
+            "type": "integer"
+          },
+          "profile_id": {
+            "description": "Project Profile profile_id",
+            "type": "integer"
+          },
+          "state": {
+            "description": "Denotes if project profile is enabled",
+            "type": "boolean"
+          }
+        },
+        "example": {
+          "projectProfile": {
+            "project_id": 1,
+            "profile_id": 1,
+            "state": true
+          }
+        }
+      },
       "ProjectSearchData": {
         "properties": {
           "user_id": {
@@ -1648,6 +2003,17 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Profile"
+            }
+          }
+        }
+      },
+      "ProjectsProfilesArray": {
+        "properties": {
+          "projects": {
+            "description": "Projects Profiles array",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProjectProfile"
             }
           }
         }
