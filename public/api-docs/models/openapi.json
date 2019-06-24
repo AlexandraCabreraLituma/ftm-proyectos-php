@@ -442,7 +442,7 @@
         ],
         "summary": "Returns all users",
         "description": "Returns all users from the system that the user has access to.",
-        "operationId": "miw_cget_users",
+        "operationId": "tfm_cget_users",
         "responses": {
           "200": {
             "description": "User array response",
@@ -480,7 +480,7 @@
         ],
         "summary": "Creates a new user",
         "description": "Creates a new user",
-        "operationId": "miw_post_users",
+        "operationId": "tfm_post_users",
         "responses": {
           "201": {
             "description": "`Created` User created",
@@ -502,8 +502,8 @@
               }
             }
           },
-          "400": {
-            "description": "`Bad Request` Username or email already exists.",
+          "409": {
+            "description": "`Duplicated Resource` Username, orcid or email already exists.",
             "content": {
               "application/json": {
                 "schema": {
@@ -523,7 +523,7 @@
             }
           },
           "422": {
-            "description": "`Unprocessable entity` Username, e-mail or password is left out",
+            "description": "`Unprocessable entity` is left out",
             "content": {
               "application/json": {
                 "schema": {
@@ -564,27 +564,6 @@
           "description": "`User` properties to add to the system",
           "required": true
         }
-      },
-      "options": {
-        "tags": [
-          "Users"
-        ],
-        "summary": "Provides the list of HTTP supported methods",
-        "description": "Return a `Allow` header with a list of HTTP supported methods.",
-        "operationId": "miw_options_users",
-        "responses": {
-          "200": {
-            "description": "`Allow` header ",
-            "headers": {
-              "allow": {
-                "description": "List of HTTP supported methods",
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
       }
     },
     "/users/{userId}": {
@@ -594,7 +573,7 @@
         ],
         "summary": "Returns a user based on a single ID",
         "description": "Returns the user identified by `userId`.",
-        "operationId": "miw_get_users",
+        "operationId": "tfm_get_users",
         "parameters": [
           {
             "$ref": "#/components/parameters/userId"
@@ -630,22 +609,24 @@
             "UPM_API_Security": []
           }
         ]
-      },
-      "put": {
+      }
+    },
+    "/users/username/{userName}": {
+      "get": {
         "tags": [
           "Users"
         ],
-        "summary": "Updates a user",
-        "description": "Updates the user identified by `userId`.",
-        "operationId": "miw_put_users",
+        "summary": "Returns a user based on a single userName",
+        "description": "Returns the user identified by `userName`.",
+        "operationId": "tfm_user_username",
         "parameters": [
           {
-            "$ref": "#/components/parameters/userId"
+            "$ref": "#/components/parameters/userName"
           }
         ],
         "responses": {
-          "209": {
-            "description": "`Content Returned` User previously existed and is now updated",
+          "200": {
+            "description": "User",
             "content": {
               "application/json": {
                 "schema": {
@@ -660,52 +641,142 @@
               "application/x-yaml": {
                 "schema": {
                   "$ref": "#/components/schemas/User"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "`Bad Request` User name or e-mail already exists",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Message"
-                }
-              },
-              "application/xml": {
-                "schema": {
-                  "$ref": "#/components/schemas/Message"
-                }
-              },
-              "application/x-yaml": {
-                "schema": {
-                  "$ref": "#/components/schemas/Message"
                 }
               }
             }
           },
           "404": {
             "$ref": "#/components/responses/404_Resource_Not_Found_Response"
-          },
-          "422": {
-            "description": "`Unprocessable entity` Username, e-mail or password is left out",
+          }
+        },
+        "security": [
+          {
+            "UPM_API_Security": []
+          }
+        ]
+      }
+    },
+    "/users/email/{email}": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Returns a user based on a single email",
+        "description": "Returns the user identified by `email`.",
+        "operationId": "tfm_user_email",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/email"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Message"
+                  "$ref": "#/components/schemas/User"
                 }
               },
               "application/xml": {
                 "schema": {
-                  "$ref": "#/components/schemas/Message"
+                  "$ref": "#/components/schemas/User"
                 }
               },
               "application/x-yaml": {
                 "schema": {
-                  "$ref": "#/components/schemas/Message"
+                  "$ref": "#/components/schemas/User"
                 }
               }
             }
+          },
+          "404": {
+            "$ref": "#/components/responses/404_Resource_Not_Found_Response"
+          }
+        },
+        "security": [
+          {
+            "UPM_API_Security": []
+          }
+        ]
+      }
+    },
+    "/users/orcid/{orcid}": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Returns a user based on a single orcid",
+        "description": "Returns the user identified by `orcid`.",
+        "operationId": "tfm_user_orcid",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/orcid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/404_Resource_Not_Found_Response"
+          }
+        },
+        "security": [
+          {
+            "UPM_API_Security": []
+          }
+        ]
+      }
+    },
+    "/users/login": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Login a user",
+        "description": "Login a  user",
+        "operationId": "tfm_login_users",
+        "responses": {
+          "200": {
+            "description": "`Login` User ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserLogin"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserLogin"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserLogin"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/404_Resource_Not_Found_Response"
           }
         },
         "security": [
@@ -717,72 +788,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UserData"
+                "$ref": "#/components/schemas/UserLoginData"
               }
             },
             "application/x-www-form-urlencoded": {
               "schema": {
-                "$ref": "#/components/schemas/UserData"
+                "$ref": "#/components/schemas/UserLoginData"
               }
             }
           },
-          "description": "`User` data to update",
+          "description": "`User` properties to add to the system",
           "required": true
-        }
-      },
-      "delete": {
-        "tags": [
-          "Users"
-        ],
-        "summary": "Deletes a user",
-        "description": "Deletes the user identified by `userId`.",
-        "operationId": "miw_delete_users",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/userId"
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "User deleted"
-          },
-          "404": {
-            "$ref": "#/components/responses/404_Resource_Not_Found_Response"
-          }
-        },
-        "security": [
-          {
-            "UPM_API_Security": []
-          }
-        ]
-      },
-      "options": {
-        "tags": [
-          "Users"
-        ],
-        "summary": "Provides the list of HTTP supported methods",
-        "description": "Return a `Allow` header with a list of HTTP supported methods.",
-        "operationId": "miw_options_users_id",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/userId"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "`Allow` header ",
-            "headers": {
-              "allow": {
-                "description": "List of HTTP supported methods",
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "`Not found resource not found`  "
-          }
         }
       }
     }
@@ -825,6 +841,33 @@
         "schema": {
           "type": "integer",
           "format": "int11"
+        }
+      },
+      "userName": {
+        "name": "userName",
+        "in": "path",
+        "description": "urserName of user",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "email": {
+        "name": "email",
+        "in": "path",
+        "description": "email of user",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "orcid": {
+        "name": "orcid",
+        "in": "path",
+        "description": "orcid of user",
+        "required": true,
+        "schema": {
+          "type": "string"
         }
       }
     },
@@ -993,6 +1036,23 @@
           }
         }
       },
+      "UserLogin": {
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "description": "User Id",
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "example": {
+          "user": {
+            "id": 1508
+          }
+        }
+      },
       "UserData": {
         "properties": {
           "username": {
@@ -1038,6 +1098,22 @@
           "lastname": "User_last_name",
           "phone": 123456789,
           "address": "User_address"
+        }
+      },
+      "UserLoginData": {
+        "properties": {
+          "username": {
+            "description": "User name",
+            "type": "string"
+          },
+          "password": {
+            "description": "User password",
+            "type": "string"
+          }
+        },
+        "example": {
+          "username": "User_name",
+          "password": "User_password"
         }
       },
       "ProjectData": {
