@@ -11,44 +11,6 @@
   },
   "paths": {
     "/projectsProfiles": {
-      "get": {
-        "tags": [
-          "ProjectsProfiles"
-        ],
-        "summary": "ProjectsProfiles all results",
-        "description": "ProjectsProfiles all results from the system that the result has access to.",
-        "operationId": "tfm_getc_projectsProfiles",
-        "responses": {
-          "200": {
-            "description": "Project array response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProjectsProfilesArray"
-                }
-              },
-              "application/xml": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProjectsProfilesArray"
-                }
-              },
-              "application/x-yaml": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProjectsProfilesArray"
-                }
-              }
-            }
-          },
-          "404": {
-            "$ref": "#/components/responses/404_Resource_Not_Found_Response"
-          }
-        },
-        "security": [
-          {
-            "UPM_API_Security": []
-          }
-        ]
-      },
       "post": {
         "tags": [
           "ProjectsProfiles"
