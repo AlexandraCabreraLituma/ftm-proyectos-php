@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "MiW User REST API",
-    "description": "[UPM] MiW User REST API operations",
+    "title": "TFM PROJECTS REST API",
+    "description": "[UPM] FTM PROJECTS REST API operations",
     "license": {
       "name": "MIT License",
       "url": "https://opensource.org/licenses/MIT"
@@ -10,71 +10,428 @@
     "version": "0.1.0"
   },
   "paths": {
-    "/login_check": {
-      "post": {
+    "/projects": {
+      "get": {
         "tags": [
-          "login"
+          "Projects"
         ],
-        "summary": "Returns UPM18 api token",
-        "description": "Returns UPM18 api token.",
-        "operationId": "miw_post_login",
+        "summary": "Projects all results",
+        "description": "Projects all results from the system that the result has access to.",
+        "operationId": "tfm_getc_projects",
         "responses": {
           "200": {
-            "description": "Results api token",
+            "description": "Project array response",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "example": {
-                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
-                  }
+                  "$ref": "#/components/schemas/ProjectsArray"
                 }
               },
               "application/xml": {
                 "schema": {
-                  "type": "object",
-                  "example": {
-                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
-                  }
+                  "$ref": "#/components/schemas/ProjectsArray"
                 }
               },
               "application/x-yaml": {
                 "schema": {
-                  "type": "object",
-                  "example": {
-                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
-                  }
+                  "$ref": "#/components/schemas/ProjectsArray"
                 }
               }
             }
           },
-          "401": {
-            "$ref": "#/components/responses/401_Unauthorized_Response"
+          "404": {
+            "$ref": "#/components/responses/404_Resource_Not_Found_Response"
           }
         },
-        "requestBody": {
-          "content": {
-            "application/x-www-form-urlencoded": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "_username": {
-                    "description": "User name",
-                    "type": "string"
-                  },
-                  "_password": {
-                    "description": "User password",
-                    "type": "string",
-                    "format": "password"
-                  }
-                },
-                "required": [
-                  "_username",
-                  "_password"
-                ]
+        "security": [
+          {
+            "UPM_API_Security": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Creates a new project",
+        "description": "Creates a new projects",
+        "operationId": "tfm_post_project",
+        "responses": {
+          "201": {
+            "description": "`Created` Project created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`Bad Request` User do not exists.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "`Unprocessable entity` entity is left out",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
               }
             }
           }
+        },
+        "security": [
+          {
+            "UPM_API_Security": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProjectData"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/ProjectData"
+              }
+            }
+          },
+          "description": "`User` properties to add to the system",
+          "required": true
+        }
+      }
+    },
+    "/projects/{projectId}": {
+      "get": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Returns a project based on a single ID",
+        "description": "Returns the user identified by `projectId`.",
+        "operationId": "tfm_get_project",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/projectId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Project",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/404_Resource_Not_Found_Response"
+          }
+        },
+        "security": [
+          {
+            "UPM_API_Security": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Updates a project",
+        "description": "Updates the project identified by `projectId`.",
+        "operationId": "miw_put_results",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/projectId"
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "`Content Returned` Project previously existed and is now updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`Bad Request` User do not exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/404_Resource_Not_Found_Response"
+          },
+          "422": {
+            "description": "`Unprocessable entity` result or user_id is left out",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "UPM_API_Security": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProjectData"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/ProjectData"
+              }
+            }
+          },
+          "description": "`Project` data to update",
+          "required": true
+        }
+      },
+      "options": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Provides the list of HTTP supported methods",
+        "description": "Return a `Allow` header with a list of HTTP supported methods.",
+        "operationId": "miw_options_projects_id",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/projectId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "`Allow` header ",
+            "headers": {
+              "allow": {
+                "description": "List of HTTP supported methods",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`Not found resource not found`  "
+          }
+        }
+      }
+    },
+    "/projects/users/{userId}": {
+      "get": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Returns projects based on user ID",
+        "description": "Returns the user identified by `userId`.",
+        "operationId": "tfm_getc_project_user",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/userId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Projects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectsArray"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectsArray"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectsArray"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`Bad Request` User do not exists.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/404_Resource_Not_Found_Response"
+          }
+        },
+        "security": [
+          {
+            "UPM_API_Security": []
+          }
+        ]
+      }
+    },
+    "/projects/search": {
+      "post": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Search advance projects",
+        "description": "Search advance projects",
+        "operationId": "tfm_search_advance",
+        "responses": {
+          "200": {
+            "description": "Projects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectsArray"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectsArray"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectsArray"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/404_Resource_Not_Found_Response"
+          }
+        },
+        "security": [
+          {
+            "UPM_API_Security": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProjectSearchData"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/ProjectData"
+              }
+            }
+          },
+          "description": "`User` properties to add to the system",
+          "required": true
         }
       }
     },
@@ -106,12 +463,6 @@
                 }
               }
             }
-          },
-          "401": {
-            "$ref": "#/components/responses/401_Unauthorized_Response"
-          },
-          "403": {
-            "$ref": "#/components/responses/403_Forbidden_Response"
           },
           "404": {
             "$ref": "#/components/responses/404_Resource_Not_Found_Response"
@@ -170,12 +521,6 @@
                 }
               }
             }
-          },
-          "401": {
-            "$ref": "#/components/responses/401_Unauthorized_Response"
-          },
-          "403": {
-            "$ref": "#/components/responses/403_Forbidden_Response"
           },
           "422": {
             "description": "`Unprocessable entity` Username, e-mail or password is left out",
@@ -276,12 +621,6 @@
               }
             }
           },
-          "401": {
-            "$ref": "#/components/responses/401_Unauthorized_Response"
-          },
-          "403": {
-            "$ref": "#/components/responses/403_Forbidden_Response"
-          },
           "404": {
             "$ref": "#/components/responses/404_Resource_Not_Found_Response"
           }
@@ -345,14 +684,28 @@
               }
             }
           },
-          "401": {
-            "$ref": "#/components/responses/401_Unauthorized_Response"
-          },
-          "403": {
-            "$ref": "#/components/responses/403_Forbidden_Response"
-          },
           "404": {
             "$ref": "#/components/responses/404_Resource_Not_Found_Response"
+          },
+          "422": {
+            "description": "`Unprocessable entity` Username, e-mail or password is left out",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -393,12 +746,6 @@
           "204": {
             "description": "User deleted"
           },
-          "401": {
-            "$ref": "#/components/responses/401_Unauthorized_Response"
-          },
-          "403": {
-            "$ref": "#/components/responses/403_Forbidden_Response"
-          },
           "404": {
             "$ref": "#/components/responses/404_Resource_Not_Found_Response"
           }
@@ -432,6 +779,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "`Not found resource not found`  "
           }
         }
       }
@@ -439,12 +789,12 @@
   },
   "tags": [
     {
-      "name": "login",
-      "description": "User login"
-    },
-    {
       "name": "Users",
       "description": "User management"
+    },
+    {
+      "name": "Projects",
+      "description": "Project management"
     }
   ],
   "servers": [
@@ -466,29 +816,19 @@
           "type": "integer",
           "format": "int32"
         }
+      },
+      "projectId": {
+        "name": "projectId",
+        "in": "path",
+        "description": "ID of project",
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "format": "int11"
+        }
       }
     },
     "responses": {
-      "401_Unauthorized_Response": {
-        "description": "`Unauthorized` invalid `token` header",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/Message"
-            }
-          },
-          "application/xml": {
-            "schema": {
-              "$ref": "#/components/schemas/Message"
-            }
-          },
-          "application/x-yaml": {
-            "schema": {
-              "$ref": "#/components/schemas/Message"
-            }
-          }
-        }
-      },
       "403_Forbidden_Response": {
         "description": "`Forbidden` You don't have permission to access",
         "content": {
@@ -542,7 +882,12 @@
         "required": [
           "id",
           "username",
-          "email"
+          "email",
+          "orcid",
+          "firstname",
+          "lastname",
+          "phone",
+          "address"
         ],
         "properties": {
           "id": {
@@ -558,13 +903,26 @@
             "description": "User email",
             "type": "string"
           },
-          "enabled": {
-            "description": "Denotes if user is enabled",
-            "type": "boolean"
+          "orcid": {
+            "description": "User orcid",
+            "type": "string"
           },
-          "isAdmin": {
-            "description": "Denotes if user has admin privileges",
-            "type": "boolean"
+          "firstname": {
+            "description": "User first name",
+            "type": "string"
+          },
+          "lastname": {
+            "description": "User last name",
+            "type": "string"
+          },
+          "phone": {
+            "description": "User phone",
+            "type": "integer",
+            "format": "int32"
+          },
+          "address": {
+            "description": "User address",
+            "type": "string"
           }
         },
         "example": {
@@ -572,8 +930,66 @@
             "id": 1508,
             "username": "User name",
             "email": "User email",
-            "enabled": true,
-            "admin": false
+            "oircid": "0000-0000-0000-0000",
+            "fisrtname": "User first name",
+            "lastname": "User last name",
+            "phone": 123456789,
+            "address": "User address"
+          }
+        }
+      },
+      "Project": {
+        "required": [
+          "id",
+          "user_id",
+          "title",
+          "description",
+          "key_words"
+        ],
+        "properties": {
+          "id": {
+            "description": "Project Id",
+            "type": "integer",
+            "format": "int11"
+          },
+          "user_id": {
+            "description": "Project user_id",
+            "type": "integer"
+          },
+          "title": {
+            "description": "Project title",
+            "type": "string"
+          },
+          "description": {
+            "description": "Project description",
+            "type": "string"
+          },
+          "key_words": {
+            "description": "Project key words",
+            "type": "string"
+          },
+          "initial_date": {
+            "description": "Project initial date",
+            "type": "string"
+          },
+          "final_date": {
+            "description": "Project final date",
+            "type": "string"
+          },
+          "enabled": {
+            "description": "Denotes if project is enabled",
+            "type": "boolean"
+          }
+        },
+        "example": {
+          "project": {
+            "user_id": "User id",
+            "title": "Title",
+            "description": "Description",
+            "key_words": "key word",
+            "initial_date": "Datetime",
+            "final_date": "Datetime",
+            "enabled": true
           }
         }
       },
@@ -583,30 +999,126 @@
             "description": "User name",
             "type": "string"
           },
+          "password": {
+            "description": "User password",
+            "type": "string"
+          },
           "email": {
             "description": "User email",
             "type": "string"
           },
-          "password": {
-            "description": "User password",
-            "type": "string",
-            "format": "password"
+          "orcid": {
+            "description": "User orcid",
+            "type": "string"
           },
-          "enabled": {
-            "description": "Denotes if user is enabled",
-            "type": "boolean"
+          "firstname": {
+            "description": "User first name",
+            "type": "string"
           },
-          "isAdmin": {
-            "description": "Denotes if user has admin privileges",
-            "type": "boolean"
+          "lastname": {
+            "description": "User last name",
+            "type": "string"
+          },
+          "phone": {
+            "description": "User phone",
+            "type": "integer",
+            "format": "int32"
+          },
+          "address": {
+            "description": "User address",
+            "type": "string"
           }
         },
         "example": {
           "username": "User_name",
-          "email": "User_email@example.com",
           "password": "User_password",
-          "enabled": true,
-          "isAdmin": false
+          "orcid": "1234-5678-1234-5678",
+          "email": "User_email@example.com",
+          "firstname": "User_first_name",
+          "lastname": "User_last_name",
+          "phone": 123456789,
+          "address": "User_address"
+        }
+      },
+      "ProjectData": {
+        "properties": {
+          "user_id": {
+            "description": "User id",
+            "type": "integer"
+          },
+          "title": {
+            "description": "Project title",
+            "type": "string"
+          },
+          "description": {
+            "description": "Project description",
+            "type": "string"
+          },
+          "key_words": {
+            "description": "Project key words",
+            "type": "string"
+          },
+          "initial_date": {
+            "description": "Project Initial Date",
+            "type": "string",
+            "format": ""
+          },
+          "final_date": {
+            "description": "Project Initial Date",
+            "type": "string",
+            "format": ""
+          },
+          "enabled": {
+            "description": "Denotes if project is enabled",
+            "type": "boolean"
+          }
+        },
+        "example": {
+          "user_id": 12,
+          "title": "Title",
+          "description": "Description",
+          "key_words": "key word",
+          "initial_date": "",
+          "final_date": "",
+          "enabled": true
+        }
+      },
+      "ProjectSearchData": {
+        "properties": {
+          "user_id": {
+            "description": "User id",
+            "type": "integer"
+          },
+          "title": {
+            "description": "Project title",
+            "type": "string"
+          },
+          "key_words": {
+            "description": "Project key words",
+            "type": "string"
+          },
+          "initial_date": {
+            "description": "Project Initial Date",
+            "type": "string",
+            "format": ""
+          },
+          "final_date": {
+            "description": "Project Initial Date",
+            "type": "string",
+            "format": ""
+          },
+          "enabled": {
+            "description": "Denotes if project is enabled",
+            "type": "boolean"
+          }
+        },
+        "example": {
+          "user_id": 12,
+          "title": "Title",
+          "key_words": "key word",
+          "initial_date": "",
+          "final_date": "",
+          "enabled": true
         }
       },
       "UsersArray": {
@@ -616,6 +1128,17 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/User"
+            }
+          }
+        }
+      },
+      "ProjectsArray": {
+        "properties": {
+          "projects": {
+            "description": "Projects array",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Project"
             }
           }
         }
