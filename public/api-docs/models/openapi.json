@@ -10,6 +10,303 @@
     "version": "0.1.0"
   },
   "paths": {
+    "/profiles": {
+      "get": {
+        "tags": [
+          "Profiles"
+        ],
+        "summary": "Profiles all results",
+        "description": "Profiles all results from the system that the result has access to.",
+        "operationId": "tfm_getc_profiles",
+        "responses": {
+          "200": {
+            "description": "Profile array response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfilesArray"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfilesArray"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfilesArray"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/404_Resource_Not_Found_Response"
+          }
+        },
+        "security": [
+          {
+            "UPM_API_Security": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Profiles"
+        ],
+        "summary": "Creates a new profile",
+        "description": "Creates a new profiles",
+        "operationId": "tfm_post_profile",
+        "responses": {
+          "201": {
+            "description": "`Created` Profile created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Profile"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Profile"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Profile"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`Bad Request` User do not exists.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "`Unprocessable entity` entity is left out",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "UPM_API_Security": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProfileData"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/ProfileData"
+              }
+            }
+          },
+          "description": "`User` properties to add to the system",
+          "required": true
+        }
+      }
+    },
+    "/profiles/{profileId}": {
+      "get": {
+        "tags": [
+          "Profiles"
+        ],
+        "summary": "Returns a project based on a single ID",
+        "description": "Returns the user identified by `profileId`.",
+        "operationId": "tfm_get_profile",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/profileId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Profile",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Profile"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Profile"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Profile"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/404_Resource_Not_Found_Response"
+          }
+        },
+        "security": [
+          {
+            "UPM_API_Security": []
+          }
+        ]
+      }
+    },
+    "/profiles/users/{userId}": {
+      "get": {
+        "tags": [
+          "Profiles"
+        ],
+        "summary": "Returns profiles based on user ID",
+        "description": "Returns the user identified by `userId`.",
+        "operationId": "tfm_getc_profile_user",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/userId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Profiles",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfilesArray"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfilesArray"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfilesArray"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`Bad Request` User do not exists.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/404_Resource_Not_Found_Response"
+          }
+        },
+        "security": [
+          {
+            "UPM_API_Security": []
+          }
+        ]
+      }
+    },
+    "/profiles/search": {
+      "post": {
+        "tags": [
+          "Profiles"
+        ],
+        "summary": "Search advance profiles",
+        "description": "Search advance profiles",
+        "operationId": "tfm_search_profiles",
+        "responses": {
+          "200": {
+            "description": "Profiles",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfilesArray"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfilesArray"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfilesArray"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/404_Resource_Not_Found_Response"
+          }
+        },
+        "security": [
+          {
+            "UPM_API_Security": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProfileSearchData"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/ProfileSearchData"
+              }
+            }
+          },
+          "description": "`User` properties to add to the system",
+          "required": true
+        }
+      }
+    },
     "/projects": {
       "get": {
         "tags": [
@@ -442,7 +739,7 @@
         ],
         "summary": "Returns all users",
         "description": "Returns all users from the system that the user has access to.",
-        "operationId": "tfm_cget_users",
+        "operationId": "tfm_getc_users",
         "responses": {
           "200": {
             "description": "User array response",
@@ -811,6 +1108,10 @@
     {
       "name": "Projects",
       "description": "Project management"
+    },
+    {
+      "name": "Profiles",
+      "description": "Profile management"
     }
   ],
   "servers": [
@@ -837,6 +1138,16 @@
         "name": "projectId",
         "in": "path",
         "description": "ID of project",
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "format": "int11"
+        }
+      },
+      "profileId": {
+        "name": "profileId",
+        "in": "path",
+        "description": "ID of profile",
         "required": true,
         "schema": {
           "type": "integer",
@@ -1036,6 +1347,52 @@
           }
         }
       },
+      "Profile": {
+        "required": [
+          "id",
+          "user_id",
+          "name",
+          "description",
+          "working_day",
+          "nivel"
+        ],
+        "properties": {
+          "id": {
+            "description": "Profile Id",
+            "type": "integer",
+            "format": "int11"
+          },
+          "user_id": {
+            "description": "Profile user_id",
+            "type": "integer"
+          },
+          "name": {
+            "description": "Profile name",
+            "type": "string"
+          },
+          "description": {
+            "description": "Profile description",
+            "type": "string"
+          },
+          "working_day": {
+            "description": "Profile working day",
+            "type": "string"
+          },
+          "nivel": {
+            "description": "Profile level",
+            "type": "string"
+          }
+        },
+        "example": {
+          "project": {
+            "user_id": "User id",
+            "name": "Name",
+            "description": "Description",
+            "working_day": "Full time",
+            "level": "Junior"
+          }
+        }
+      },
       "UserLogin": {
         "required": [
           "id"
@@ -1159,6 +1516,42 @@
           "enabled": true
         }
       },
+      "ProfileData": {
+        "properties": {
+          "id": {
+            "description": "Profile Id",
+            "type": "integer",
+            "format": "int11"
+          },
+          "user_id": {
+            "description": "Profile user_id",
+            "type": "integer"
+          },
+          "name": {
+            "description": "Profile name",
+            "type": "string"
+          },
+          "description": {
+            "description": "Profile description",
+            "type": "string"
+          },
+          "working_day": {
+            "description": "Profile working day",
+            "type": "string"
+          },
+          "nivel": {
+            "description": "Profile level",
+            "type": "string"
+          }
+        },
+        "example": {
+          "user_id": 12,
+          "name": "Title",
+          "description": "Description",
+          "working_day": "key word",
+          "nivel": "nivel"
+        }
+      },
       "ProjectSearchData": {
         "properties": {
           "user_id": {
@@ -1189,6 +1582,35 @@
           }
         },
         "example": {
+          "project": {
+            "user_id": "User id",
+            "name": "Name",
+            "description": "Description",
+            "working_day": "Full time",
+            "level": "Junior"
+          }
+        }
+      },
+      "ProfileSearchData": {
+        "properties": {
+          "user_id": {
+            "description": "User id",
+            "type": "integer"
+          },
+          "name": {
+            "description": "Profile name",
+            "type": "string"
+          },
+          "working_day": {
+            "description": "Profile working day",
+            "type": "string"
+          },
+          "nivel": {
+            "description": "Profile level",
+            "type": "string"
+          }
+        },
+        "example": {
           "user_id": 12,
           "title": "Title",
           "key_words": "key word",
@@ -1215,6 +1637,17 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Project"
+            }
+          }
+        }
+      },
+      "ProfilesArray": {
+        "properties": {
+          "projects": {
+            "description": "Profiles array",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Profile"
             }
           }
         }
