@@ -1910,7 +1910,10 @@
           },
           "user": {
             "description": "User",
-            "type": "string"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/User"
+            }
           }
         },
         "example": {
@@ -1958,7 +1961,10 @@
           },
           "user": {
             "description": "User",
-            "type": "string"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/User"
+            }
           }
         },
         "example": {
@@ -1985,10 +1991,17 @@
           },
           "project": {
             "description": "Project",
-            "type": "string"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Project"
+            }
           },
           "profile": {
-            "type": "string"
+            "description": "Profile",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Profile"
+            }
           },
           "state": {
             "description": "Denotes if project profile is enabled",
