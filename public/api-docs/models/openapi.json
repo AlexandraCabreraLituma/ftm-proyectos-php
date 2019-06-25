@@ -10,6 +10,516 @@
     "version": "0.1.0"
   },
   "paths": {
+    "/nominations": {
+      "post": {
+        "tags": [
+          "Nominations"
+        ],
+        "summary": "Creates a new Nominations",
+        "description": "Creates a new Nominations",
+        "operationId": "tfm_post_nominations",
+        "responses": {
+          "201": {
+            "description": "`Created` Nominations created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Nomination"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Nomination"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Nomination"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`Bad Request` User or ProjectProfile do not exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`Conflict` Duplicated nomination",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "`Unprocessable entity` entity is left out",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "UPM_API_Security": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NominationData"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/NominationData"
+              }
+            }
+          },
+          "description": "`User` properties to add to the system",
+          "required": true
+        }
+      }
+    },
+    "/nominations/{nominationId}": {
+      "get": {
+        "tags": [
+          "Nominations"
+        ],
+        "summary": "Returns a nomination based on a single ID",
+        "description": "Returns the nomination identified by `nominationId`.",
+        "operationId": "tfm_get_nomination",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/nominationId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Nomination",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Nomination"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Nomination"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Nomination"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/404_Resource_Not_Found_Response"
+          }
+        },
+        "security": [
+          {
+            "UPM_API_Security": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Nominations"
+        ],
+        "summary": "Updates a nomination",
+        "description": "Updates the nomination identified by `nominationId`.",
+        "operationId": "miw_put_nomination",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/nominationId"
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "`Content Returned` Nomination previously existed and is now updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Nomination"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Nomination"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Nomination"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`Bad Request` ProjectProfile or User do not exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/404_Resource_Not_Found_Response"
+          },
+          "422": {
+            "description": "`Unprocessable entity` proyectprofile  or user is left out",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "UPM_API_Security": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NominationData"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/NominationData"
+              }
+            }
+          },
+          "description": "`Nomination` data to update",
+          "required": true
+        }
+      },
+      "delete": {
+        "tags": [
+          "Nominations"
+        ],
+        "summary": "Deletes a nomination",
+        "description": "Deletes the nomination identified by `nominationId`.",
+        "operationId": "miw_delete_nomination",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/nominationId"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Nomination deleted"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_Resource_Not_Found_Response"
+          }
+        },
+        "security": [
+          {
+            "UPM_API_Security": []
+          }
+        ]
+      },
+      "options": {
+        "tags": [
+          "Nominations"
+        ],
+        "summary": "Provides the list of HTTP supported methods",
+        "description": "Return a `Allow` header with a list of HTTP supported methods.",
+        "operationId": "miw_options_nomination_id",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/nominationId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "`Allow` header ",
+            "headers": {
+              "allow": {
+                "description": "List of HTTP supported methods",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`Not found resource not found`  "
+          }
+        }
+      }
+    },
+    "/nominations/user/{userId}": {
+      "get": {
+        "tags": [
+          "Nominations"
+        ],
+        "summary": "Returns nominations based on user ID",
+        "description": "Returns the nomination identified by `userId`.",
+        "operationId": "tfm_getc_nomination_user",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/userId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Nominations",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NominationsArray"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/NominationsArray"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/NominationsArray"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`Bad Request` User do not exists.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/404_Resource_Not_Found_Response"
+          }
+        },
+        "security": [
+          {
+            "UPM_API_Security": []
+          }
+        ]
+      }
+    },
+    "/nominations/projectsProfiles/{projectProfileId}": {
+      "get": {
+        "tags": [
+          "Nominations"
+        ],
+        "summary": "Returns nominations based on ProjectProfile ID",
+        "description": "Returns the nomination identified by `projectProfileId`.",
+        "operationId": "tfm_getc_nomination_project_profile",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/projectProfileId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Nominations",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NominationsArray"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/NominationsArray"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/NominationsArray"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`Bad Request` Project Profile do not exists.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/404_Resource_Not_Found_Response"
+          }
+        },
+        "security": [
+          {
+            "UPM_API_Security": []
+          }
+        ]
+      }
+    },
+    "/nominations/users/{userId}/projectsProfiles/{projectProfileId}": {
+      "get": {
+        "tags": [
+          "Nominations"
+        ],
+        "summary": "Returns nominations based on ProjectProfile ID and User ID",
+        "description": "Returns the nomination identified by  `userId` and `projectProfileId`",
+        "operationId": "tfm_getc_nomination_user_project_profile",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/projectProfileId"
+          },
+          {
+            "$ref": "#/components/parameters/userId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Nominations",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NominationsArray"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/NominationsArray"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/NominationsArray"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`Bad Request` User or Project Profile do not exists.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/404_Resource_Not_Found_Response"
+          }
+        },
+        "security": [
+          {
+            "UPM_API_Security": []
+          }
+        ]
+      }
+    },
     "/projectsProfiles": {
       "post": {
         "tags": [
@@ -1671,6 +2181,10 @@
     {
       "name": "Profiles",
       "description": "Profile management"
+    },
+    {
+      "name": "Nominations",
+      "description": "Nomination management"
     }
   ],
   "servers": [
@@ -1717,6 +2231,16 @@
         "name": "projectProfileId",
         "in": "path",
         "description": "ID of project profile",
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "format": "int11"
+        }
+      },
+      "nominationId": {
+        "name": "nominationId",
+        "in": "path",
+        "description": "ID of nomination",
         "required": true,
         "schema": {
           "type": "integer",
@@ -1910,7 +2434,10 @@
           },
           "user": {
             "description": "User",
-            "type": "string"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/User"
+            }
           }
         },
         "example": {
@@ -1958,7 +2485,10 @@
           },
           "user": {
             "description": "User",
-            "type": "string"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/User"
+            }
           }
         },
         "example": {
@@ -1985,10 +2515,17 @@
           },
           "project": {
             "description": "Project",
-            "type": "string"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Project"
+            }
           },
           "profile": {
-            "type": "string"
+            "description": "Profile",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Profile"
+            }
           },
           "state": {
             "description": "Denotes if project profile is enabled",
@@ -2001,6 +2538,47 @@
             "project": "Project",
             "profile": "Profile",
             "state": true
+          }
+        }
+      },
+      "Nomination": {
+        "required": [
+          "id",
+          "projectProfile",
+          "user",
+          "state"
+        ],
+        "properties": {
+          "id": {
+            "description": "Project Id",
+            "type": "integer",
+            "format": "int11"
+          },
+          "projectProfile": {
+            "description": "ProjectProfile",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProjectProfile"
+            }
+          },
+          "user": {
+            "description": "User",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/User"
+            }
+          },
+          "state": {
+            "description": "Denotes if nomination is state",
+            "type": "string"
+          }
+        },
+        "example": {
+          "Nomination": {
+            "id": 12,
+            "user": "User",
+            "projectProfile": "ProjectProfile",
+            "state": "postulated"
           }
         }
       },
@@ -2323,6 +2901,29 @@
           }
         }
       },
+      "NominationData": {
+        "properties": {
+          "project_profile_id": {
+            "description": "Project Profile id",
+            "type": "integer"
+          },
+          "user_id": {
+            "description": "User id",
+            "type": "integer"
+          },
+          "state": {
+            "description": "Denotes if nomnation is status",
+            "type": "string"
+          }
+        },
+        "example": {
+          "projectprofile": {
+            "user_id": "User id",
+            "project_profile_id": "Project Profile id",
+            "state": "postulated"
+          }
+        }
+      },
       "UsersArray": {
         "properties": {
           "users": {
@@ -2363,6 +2964,17 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/ProjectProfile"
+            }
+          }
+        }
+      },
+      "NominationsArray": {
+        "properties": {
+          "projects": {
+            "description": "Nominations array",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Nomination"
             }
           }
         }
