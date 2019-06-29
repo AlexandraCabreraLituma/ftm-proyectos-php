@@ -33,7 +33,6 @@ class ApiUserController extends AbstractController
     const EMAIL = '/email';
     const ORCID = '/orcid';
 
-
     /**
      * @Route(path="", name="post",methods={Request::METHOD_POST})
      * @param Request $request
