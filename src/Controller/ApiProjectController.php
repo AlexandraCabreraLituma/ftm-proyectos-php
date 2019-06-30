@@ -160,13 +160,13 @@ class ApiProjectController extends AbstractController
         $dataRequest = $request->getContent();
         $data = json_decode($dataRequest, true);
 
-        $query = $em->createQuery('SELECT pro FROM App\Entity\Project pro INNER JOIN App\Entity\User u where pro.user=u and u.id=?1 and pro.enabled=?2 and pro.title LIKE :title  and pro.keyWords LIKE :key_words and pro.initialDate >= :fechaInicial and pro.finalDate >= :fechaFinal ');
+        $query = $em->createQuery('SELECT pro FROM App\Entity\Project pro INNER JOIN App\Entity\User u where pro.user=u and u.id=?1 and pro.enabled=?2 and pro.title LIKE :title  and pro.keyWords LIKE :key_words and pro.initialDate >= :fechaInicial and pro.finalDate <=:fechaFinal');
         $query->setParameter('1', $data['user_id']??true);
         $query->setParameter('2',$data['enabled']??true);
         $query->setParameter('title', '%'.$data['title'].'%');
         $query->setParameter('key_words', '%'.$data['key_words'].'%');
-        $query->setParameter('fechaInicial',"'".$data['initial_date']."'");
-        $query->setParameter('fechaFinal',"'".$data['final_date']."'");
+        $query->setParameter('fechaInicial',$data['initial_date']);
+        $query->setParameter('fechaFinal',$data['final_date']);
 
 
         /** * @var Project[] $projects */
