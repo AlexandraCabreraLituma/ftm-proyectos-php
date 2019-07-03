@@ -115,7 +115,7 @@ class ApiProfileController extends AbstractController
         $dataRequest = $request->getContent();
         $data = json_decode($dataRequest, true);
 
-        $query = $em->createQuery('SELECT p FROM App\Entity\Profile p INNER JOIN App\Entity\User u where p.user=u and u.id=?1 and p.name LIKE :name and p.nivel LIKE :level and p.workingDay LIKE :workingDay ');
+        $query = $em->createQuery('SELECT p FROM App\Entity\Profile p INNER JOIN App\Entity\User u where p.user=u and u.id=?1 and p.name LIKE :name and p.nivel LIKE :level and p.workingDay LIKE :workingDay ORDER BY p.name ASC');
         $query->setParameter('1', $data['user_id']??true);
         $query->setParameter('name','%'.$data['name'].'%');
         $query->setParameter('level', '%'.$data['nivel'].'%');
