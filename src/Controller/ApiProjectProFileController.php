@@ -206,17 +206,34 @@ class ApiProjectProFileController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $dataRequest = $request->getContent();
         $data = json_decode($dataRequest, true);
+        if ($data['initial_date']!= ""){
+            $valorFechaInitial=' and pro.initialDate >= :fechaInicial';
+        }
+        else{
+            $valorFechaInitial='';
+        }
+        if ($data['final_date']!= ""){
+            $valorFechaFinal=' and pro.finalDate <= :fechaFinal';
+        }
+        else{
+            $valorFechaFinal='';
+        }
 
-
-        $query = $em->createQuery("SELECT pp FROM App\Entity\Projectprofile pp INNER JOIN App\Entity\Profile p INNER JOIN App\Entity\Project pro where pp.profile=p and pp.project=pro and pp.state=?1 and p.name LIKE :name and p.nivel LIKE :level and p.workingDay LIKE :workingDay and pro.title LIKE :title and pro.initialDate >= :fechaInicial and pro.finalDate <= :fechaFinal ");
+        $query = $em->createQuery("SELECT pp FROM App\Entity\Projectprofile pp INNER JOIN App\Entity\Profile p INNER JOIN App\Entity\Project pro where pp.profile=p and pp.project=pro and pp.state=?1 and p.name LIKE :name and p.nivel LIKE :level and p.workingDay LIKE :workingDay and pro.title LIKE :title ".$valorFechaInitial.$valorFechaFinal);
         $query->setParameter('1',$data['state']??true);
         $query->setParameter('name','%'.$data['name'].'%');
         $query->setParameter('level', '%'.$data['nivel'].'%');
         $query->setParameter('workingDay', '%'.$data['working_day'].'%');
         $query->setParameter('title', '%'.$data['title'].'%');
-        $query->setParameter('fechaInicial',$data['initial_date']);
-        $query->setParameter('fechaFinal',$data['final_date']);
 
+
+
+        if ($data['initial_date']!= ""){
+            $query->setParameter('fechaInicial',$data['initial_date']);
+        }
+        if ($data['final_date']!= ""){
+            $query->setParameter('fechaFinal',$data['final_date']);
+        }
         /** * @var Projectprofile[] $projectsprofiles */
         $projectsprofiles = $query->getResult();
 
